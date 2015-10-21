@@ -2,10 +2,7 @@
   "extends": "airbnb",
   "rules": {
     "comma-dangle": 2,
-    "id-length": 0
-  },
-  "globals": {
-    "adyen": true,
-    "_": true
+    "id-length": 0,
+    "no-console": 0
   }
 }

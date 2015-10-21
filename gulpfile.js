@@ -7,20 +7,31 @@ var concat = require('gulp-concat');
 var webserver = require('gulp-webserver');
 var watch = require('gulp-watch');
 
-gulp.task('default', ['copy-html', 'transpile-js']); 
+gulp.task('default', ['copy', 'transpile-js']);
 
 gulp.task('transpile-js', function () {
-  return gulp.src('src/**/*.js')
+  gulp.src('src/js/**/*.js')
     .pipe(sourcemaps.init())
     .pipe(babel())
     .pipe(concat('build.js'))
     .pipe(sourcemaps.write('.'))
     .pipe(gulp.dest('dist'));
+
+  gulp.src('src/worker/*.js')
+    .pipe(sourcemaps.init())
+    .pipe(babel())
+    .pipe(concat('service-worker.js'))
+    .pipe(sourcemaps.write('.'))
+    .pipe(gulp.dest('dist'));
 });
 
-gulp.task('copy-html', function () {
-  return gulp.src('src/index.html')
+gulp.task('copy', function () {
+  gulp.src('src/index.html')
     .pipe(gulp.dest('dist'));
+  gulp.src('src/manifest.json')
+    .pipe(gulp.dest('dist'));
+  gulp.src('src/images/*.png')
+    .pipe(gulp.dest('dist/images'));
 });
 
 gulp.task('server', ['default'], function () {
@@ -33,7 +44,7 @@ gulp.task('server', ['default'], function () {
 });
 
 gulp.task('watch', ['default'], function () {
-  watch('src/**/*.js', function () {
+  watch('src/**/*.*', function () {
     gulp.start('default');
   });
 });
