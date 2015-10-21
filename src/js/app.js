@@ -1,7 +1,7 @@
 let isPushEnabled = false;
 
 const sendSubscriptionToServer = (subscription) => {
-  fetch('https://test-portal.absalon.is', {method: 'post', body: subscription.endpoint});
+  fetch('https://test.absalon.is', {method: 'post', body: subscription.endpoint});
 };
 
 const subscribe = () => {
