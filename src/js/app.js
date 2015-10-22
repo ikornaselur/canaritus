@@ -1,7 +1,9 @@
 let isPushEnabled = false;
 
 const sendSubscriptionToServer = (subscription) => {
-  fetch('https://test.absalon.is', {method: 'post', body: subscription.endpoint});
+  const {endpoint} = subscription;
+  const id = endpoint.split('/')[endpoint.split('/').length - 1];
+  fetch(`https://test.absalon.is?${id}`);
 };
 
 const subscribe = () => {
