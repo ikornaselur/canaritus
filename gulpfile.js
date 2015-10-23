@@ -10,7 +10,7 @@ var watch = require('gulp-watch');
 gulp.task('default', ['copy', 'transpile-js']);
 
 gulp.task('transpile-js', function () {
-  gulp.src('src/js/**/*.js')
+  gulp.src('src/client/**/*.js')
     .pipe(sourcemaps.init())
     .pipe(babel())
     .pipe(concat('build.js'))

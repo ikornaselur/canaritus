@@ -2,9 +2,11 @@
   "name": "canaritus",
   "version": "0.0.1",
   "description": "A status page with native push notifications to subscribers",
-  "main": "server.js",
+  "main": "src/server/server.js",
   "scripts": {
     "build": "gulp",
+    "start": "node src/server/server.js",
+    "combined": "npm run build && npm start",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
