@@ -2,8 +2,9 @@
   "name": "canaritus",
   "version": "0.0.1",
   "description": "A status page with native push notifications to subscribers",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
+    "build": "gulp",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
