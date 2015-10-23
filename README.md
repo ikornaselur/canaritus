@@ -8,7 +8,6 @@ The application uses Google Push Notifications to notify users on those events e
 export GCM `SERVER_KEY` env variable first, then
 ```
 npm install
-npm run build
 npm start
 ```
 

@@ -5,8 +5,8 @@
   "main": "src/server/server.js",
   "scripts": {
     "build": "gulp",
-    "start": "node src/server/server.js",
-    "combined": "npm run build && npm start",
+    "server": "node src/server/server.js",
+    "start": "npm run build && npm run server",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
