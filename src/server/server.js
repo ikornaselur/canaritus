@@ -24,11 +24,25 @@ if (!HOST_URL) {
   console.log('HOST_URL env variable not set, will not do health checks.');
 }
 
+const timeStamp = () => {
+  const now = new Date();
+  const twoNum = (num) => {
+    return num < 10 ? '0' + num : num.toString();
+  };
+  const date = `${now.getFullYear()}-${twoNum(now.getMonth())}-${twoNum(now.getDate())}`;
+  const time = `${twoNum(now.getHours())}:${twoNum(now.getMinutes())}:${twoNum(now.getSeconds())}`;
+  return `${date} ${time}`;
+};
+
+const log = (type, string) => {
+  console.log(`${timeStamp()} - ${type} - ${string}`);
+};
+
 const pingClients = () => {
-  console.log('Pinging clients...');
+  log('PUSH', 'Pinging all clients');
   db.all('SELECT * FROM ids', (err, rows) => {
     if (err !== null) {
-      console.log('Failed to select registration ids');
+      log('PUSH', 'Failed to select registration ids');
     } else {
       const ids = rows.map(x => x.id);
       fetch(GCM_ENDPOINT, {
@@ -42,17 +56,17 @@ const pingClients = () => {
           'registration_ids': ids,
         }),
       }).then((res) => {
-        console.log('Notification pings sent, status:', res.status);
+        log('PUSH', 'Notification pings sent, status:', res.status);
       });
     }
   });
 };
 
 const addEvent = (title, body) => {
-  console.log(`Adding event "${title}: ${body}"`);
+  log('EVENT', `Adding event "${title}: ${body}"`);
   db.run(`INSERT INTO events (title, body, time) VALUES('${title}', '${body}', datetime('now'))`, (err) => {
     if (err !== null) {
-      console.log('Error adding event', err);
+      log('EVENT', 'Error adding event', err);
       return false;
     }
     pingClients();
@@ -61,7 +75,7 @@ const addEvent = (title, body) => {
 };
 
 const healthCheck = (url, status) => {
-  console.log('Doing health check on ', url);
+  log('UPTIME', 'Health check: ' + url);
   return fetch(url).then((res) => {
     return res.status === status;
   });
@@ -75,10 +89,10 @@ app.post('/subscribe', (req, res) => {
   if (!id) {
     res.status(400).send('id is missing from the post');
   } else {
-    console.log(`Adding ${id} to ids table`);
+    log('DB', `Adding ${id} to ids table`);
     db.run(`INSERT OR IGNORE INTO ids (id) VALUES('${id}')`, (err) => {
       if (err !== null) {
-        console.log('Error adding id', err);
+        log('DB', 'Error adding id', err);
         res.sendStatus(500);
       } else {
         res.sendStatus(201);
@@ -92,10 +106,10 @@ app.post('/unsubscribe', (req, res) => {
   if (!id) {
     res.status(400).send('id is missing from the post');
   } else {
-    console.log(`Removing ${id} from ids table`);
+    log('DB', `Removing ${id} from ids table`);
     db.run(`DELETE FROM ids WHERE id='${id}'`, (err) => {
       if (err !== null) {
-        console.log('Error removing id', err);
+        log('DB', 'Error removing id', err);
         res.sendStatus(500);
       } else {
         res.sendStatus(204);
@@ -137,6 +151,7 @@ app.get('/event', (req, res) => {
  */
 
 if (HOST_URL) {
+  log('UPTIME', `Creating periodic task for ${HOST_URL}`);
   const healthTask = new PeriodicTask(60000, () => {
     healthCheck(HOST_URL, HOST_CODE).then((healthy) => {
       if (!healthy && IS_HEALTHY) {
@@ -147,7 +162,7 @@ if (HOST_URL) {
         IS_HEALTHY = true;
       }
     }).catch((err) => {
-      console.log('Error doing a healthcheck:', err);
+      log('UPTIME', 'Error doing a healthcheck:', err);
       if (IS_HEALTHY) {
         addEvent('Health degraded', 'Health check just failed, failed to reach host.');
         IS_HEALTHY = false;
@@ -161,4 +176,4 @@ if (HOST_URL) {
  * Start server
  */
 app.listen(PORT);
-console.log(`Listening on port ${PORT}`);
+log('SERVER', `Listening on port ${PORT}`);
