@@ -14,27 +14,31 @@ module.exports = (db, gcmEndpoint, serverKey, fetch) => {
   };
 
   const pingClients = () => {
-    log('PUSH', 'Pinging all clients');
-    db.all('SELECT * FROM ids', (err, rows) => {
-      if (err !== null) {
-        log('PUSH', 'Failed to select registration ids');
-      } else {
-        const ids = rows.map(x => x.id);
-        fetch(gcmEndpoint, {
-          method: 'post',
-          headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-            'Authorization': `key=${serverKey}`,
-          },
-          body: JSON.stringify({
-            'registration_ids': ids,
-          }),
-        }).then((res) => {
-          log('PUSH', 'Notification pings sent, status:', res.status);
-        });
-      }
-    });
+    if (serverKey) {
+      log('PUSH', 'Pinging all clients');
+      db.all('SELECT * FROM ids', (err, rows) => {
+        if (err !== null) {
+          log('PUSH', 'Failed to select registration ids');
+        } else {
+          const ids = rows.map(x => x.id);
+          fetch(gcmEndpoint, {
+            method: 'post',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+              'Authorization': `key=${serverKey}`,
+            },
+            body: JSON.stringify({
+              'registration_ids': ids,
+            }),
+          }).then((res) => {
+            log('PUSH', 'Notification pings sent, status:', res.status);
+          });
+        }
+      });
+    } else {
+      log('PUSH', 'SERVER_KEY env variable was not set. Will not push notifications');
+    }
   };
 
   const addEvent = (title, body) => {

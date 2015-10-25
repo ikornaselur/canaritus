@@ -27,9 +27,6 @@ var IS_HEALTHY = true; // eslint-disable-line no-var,vars-on-top
 /*
  * Warn if missing env variables cause parts of application not to work
  */
-if (!SERVER_KEY) {
-  console.log('SERVER_KEY env variable not set, will not be able to send push notification.');
-}
 if (!HOST_URL) {
   console.log('HOST_URL env variable not set, will not do health checks.');
 }
