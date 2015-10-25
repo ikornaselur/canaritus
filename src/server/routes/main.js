@@ -1,4 +1,4 @@
-module.exports = (app, db, addEvent, log) => {
+module.exports = (app, db, config, addEvent, log) => {
   app.post('/subscribe', (req, res) => {
     const id = req.body.id;
     if (!id) {
@@ -34,6 +34,8 @@ module.exports = (app, db, addEvent, log) => {
   });
 
   app.post('/event', (req, res) => {
+    res.sendStatus(404);
+    /* TODO: Update this based on DB changes
     const title = req.body.title;
     const body = req.body.body;
     if (!title || !body) {
@@ -46,6 +48,7 @@ module.exports = (app, db, addEvent, log) => {
         res.sendStatus(500);
       }
     }
+    */
   });
 
   app.get('/event', (req, res) => {
@@ -60,4 +63,6 @@ module.exports = (app, db, addEvent, log) => {
       }
     });
   });
+
+  require('./status')(app, db, config, addEvent, log);
 };
