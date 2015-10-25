@@ -9,7 +9,7 @@ const yamlConfig = require('node-yaml-config');
 const app = express();
 const db = new sqlite3.Database('canaritus.db');
 db.run('CREATE TABLE IF NOT EXISTS ids (id TEXT, UNIQUE(id))');
-db.run('CREATE TABLE IF NOT EXISTS events (title TEXT, body TEXT, time DATETIME)');
+db.run('CREATE TABLE IF NOT EXISTS events (host TEXT, type TEXT, healthy BOOLEAN, title TEXT, body TEXT, time DATETIME)');
 
 /*
  * Application constants

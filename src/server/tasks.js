@@ -10,22 +10,26 @@ module.exports = (config, utils, db) => {
   };
 
   const healthy = {};
+  const healthyMsg = (host) => `${host} is back up`;
+  const unhealthyMsg = (host) => `${host} is down`;
+  // TODO: Unhealthy msg to check for how long it was down?
+
+
   const createHealthCheck = (host, url, status, interval) => {
     utils.log('UPTIME', `Creating periodic task for ${host} with ${interval}ms interval`);
     healthy[url] = true;
     const healthTask = new PeriodicTask(interval, () => {
       healthCheck(host, url, status).then((isHealthy) => {
         if (!isHealthy && healthy[url]) {
-          utils.addEvent('Health degraded', `Health check failed for ${host}.`, db);
-          healthy[url] = false;
+          utils.addEvent(host, 'Automatic', isHealthy, 'Health degraded', unhealthyMsg(host), db);
+          healthy[url] = isHealthy;
         } else if (isHealthy && !healthy[url]) {
-          utils.addEvent('Health recovered', `Health check was successful for ${host}`, db);
-          healthy[url] = true;
+          utils.addEvent(host, 'Automatic', isHealthy, 'Health recovered', healthyMsg(host), db);
+          healthy[url] = isHealthy;
         }
-      }).catch((err) => {
-        utils.log('UPTIME', 'Error doing a healthcheck:', err);
+      }).catch(() => {
         if (healthy[url]) {
-          utils.addEvent('Health degraded', `Health check failed for ${host}.`, db);
+          utils.addEvent(host, 'Automatic', false, 'Health degraded', unhealthyMsg(host), db);
           healthy[url] = false;
         }
       });

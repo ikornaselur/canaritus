@@ -43,9 +43,13 @@ module.exports = (db, gcmEndpoint, serverKey) => {
     }
   };
 
-  const addEvent = (title, body) => {
-    log('EVENT', `Adding event "${title}: ${body}"`);
-    db.run(`INSERT INTO events (title, body, time) VALUES('${title}', '${body}', datetime('now'))`, (err) => {
+  const addEvent = (host, type, healthy, title, body) => {
+    log('EVENT', `Adding event for host ${host}: "${title}: ${body}"`);
+
+    const fields = 'host, type, healthy, title, body, time';
+    const values = `'${host}', '${type}', '${healthy}', '${title}', '${body}', datetime('now')`;
+
+    db.run(`INSERT INTO events (${fields}) VALUES(${values})`, (err) => {
       if (err !== null) {
         log('EVENT', 'Error adding event', err);
         return false;
