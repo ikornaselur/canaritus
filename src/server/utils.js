@@ -1,3 +1,5 @@
+const fetch = require('node-fetch');
+
 module.exports = (db, gcmEndpoint, serverKey) => {
   const timeStamp = () => {
     const now = new Date();
