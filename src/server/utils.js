@@ -1,4 +1,4 @@
-module.exports = (db, gcmEndpoint, serverKey, fetch) => {
+module.exports = (db, gcmEndpoint, serverKey) => {
   const timeStamp = () => {
     const now = new Date();
     const twoNum = (num) => {

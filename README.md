@@ -6,12 +6,17 @@ The application uses Google Push Notifications to notify users on those events e
 
 This tool needs to be served behind https for the chrome notifications to work.
 
-### Running
+### Configuration
 List of environment variables and what they're used for: 
 
+- `PORT`: The port to server the application on (default: 3000)
 - `SERVER_KEY`: The GCM server key, used for the notifications
-- `HOST_URL`: The host being being periodically checked (empty disables periodic checks)
-- `HOST_CODE`: The host status code to expect (default: 200)
+- `HOST_YAML`: The yaml hosts file (default: hosts.yaml)
+
+#### Automatic hosts uptime checks
+You need to configure what hosts to do automatic uptime checks on. See the `hosts.example.yaml` file to see how it's structured. The default configuration file should be called `hosts.yaml`
+
+### Running
 
 ```
 npm install
