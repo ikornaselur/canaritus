@@ -1,4 +1,4 @@
-module.exports = (app, db, addEvent, log) => {
+module.exports = (app, db, config, addEvent, log) => {
   app.post('/subscribe', (req, res) => {
     const id = req.body.id;
     if (!id) {
@@ -53,7 +53,6 @@ module.exports = (app, db, addEvent, log) => {
 
   app.get('/event', (req, res) => {
     db.get('SELECT * FROM events ORDER BY time DESC LIMIT 1', (err, event) => {
-      console.log(err);
       if (err !== null) {
         res.status(500).send('Failed to get latest event');
       } else {
@@ -65,5 +64,5 @@ module.exports = (app, db, addEvent, log) => {
     });
   });
 
-  require('./status')(app, db, addEvent, log);
+  require('./status')(app, db, config, addEvent, log);
 };

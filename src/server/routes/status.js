@@ -1,13 +1,7 @@
-module.exports = (app, db, addEvent, log) => {
+module.exports = (app, db, config, addEvent, log) => {
   app.get('/status', (req, res) => {
-    db.all('SELECT DISTINCT host FROM events', (err, events) => {
-      if (err) {
-        log('DB', 'Error getting hosts: ' + err);
-        res.status(500).send('Unable to get the list of hosts');
-      } else {
-        res.json(events);
-      }
-    });
+    const hosts = Object.keys(config);
+    res.json(hosts);
   });
 
   app.get('/status/:host', (req, res) => {
