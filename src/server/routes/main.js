@@ -34,7 +34,7 @@ module.exports = (app, db, addEvent, log) => {
   });
 
   app.post('/event', (req, res) => {
-    res.status(404);
+    res.sendStatus(404);
     /* TODO: Update this based on DB changes
     const title = req.body.title;
     const body = req.body.body;
@@ -53,6 +53,7 @@ module.exports = (app, db, addEvent, log) => {
 
   app.get('/event', (req, res) => {
     db.get('SELECT * FROM events ORDER BY time DESC LIMIT 1', (err, event) => {
+      console.log(err);
       if (err !== null) {
         res.status(500).send('Failed to get latest event');
       } else {
