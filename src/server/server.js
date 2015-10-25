@@ -14,7 +14,7 @@ db.run('CREATE TABLE IF NOT EXISTS events (title TEXT, body TEXT, time DATETIME)
 /*
  * Application constants
  */
-const PORT = process.env.SERVER_KEY || 3000;
+const PORT = process.env.PORT || 3000;
 const SERVER_KEY = process.env.SERVER_KEY;
 const GCM_ENDPOINT = 'https://android.googleapis.com/gcm/send';
 const HOST_YAML = process.env.HOST_YAML || 'hosts.yaml';
