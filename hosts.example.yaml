@@ -1,0 +1,5 @@
+default:
+  example:
+    url: 'http://example.com'
+    status: 200
+    interval: 60000

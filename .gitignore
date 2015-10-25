@@ -2,3 +2,5 @@ node_modules
 dist
 secrets
 canaritus.db
+hosts.yaml
+npm-debug.log
