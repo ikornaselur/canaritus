@@ -15,9 +15,8 @@ db.run('CREATE TABLE IF NOT EXISTS events (host TEXT, type TEXT, healthy BOOLEAN
  * Application constants
  */
 const PORT = process.env.PORT || 3000;
-const SERVER_KEY = process.env.SERVER_KEY;
 const GCM_ENDPOINT = 'https://android.googleapis.com/gcm/send';
-const HOST_YAML = process.env.HOST_YAML || 'hosts.yaml';
+const HOST_YAML = process.env.HOST_YAML || 'config.yaml';
 
 /*
  * Hosts config
@@ -33,7 +32,7 @@ app.use(express.static(__dirname + '/../../dist'));
 /*
  * Set up the utils
  */
-const utils = require('./utils')(db, GCM_ENDPOINT, SERVER_KEY);
+const utils = require('./utils')(db, config, GCM_ENDPOINT);
 
 /*
  * Set up the routes

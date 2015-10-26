@@ -1,6 +1,6 @@
 const fetch = require('node-fetch');
 
-module.exports = (db, gcmEndpoint, serverKey) => {
+module.exports = (db, config, gcmEndpoint) => {
   const timeStamp = () => {
     const now = new Date();
     const twoNum = (num) => {
@@ -16,7 +16,7 @@ module.exports = (db, gcmEndpoint, serverKey) => {
   };
 
   const pingClients = () => {
-    if (serverKey) {
+    if (config.notifications.gcm.enabled) {
       log('PUSH', 'Pinging all clients');
       db.all('SELECT * FROM ids', (err, rows) => {
         if (err !== null) {
@@ -28,7 +28,7 @@ module.exports = (db, gcmEndpoint, serverKey) => {
             headers: {
               'Accept': 'application/json',
               'Content-Type': 'application/json',
-              'Authorization': `key=${serverKey}`,
+              'Authorization': `key=${config.notifications.gcm.server_key}`,
             },
             body: JSON.stringify({
               'registration_ids': ids,
