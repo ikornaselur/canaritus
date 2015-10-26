@@ -1,4 +1,19 @@
 module.exports = (app, db, config, addEvent, log) => {
+  app.get('/manifest.json', (req, res) => {
+    res.json({
+      'name': 'Canaritus - Canary Status page',
+      'short_name': 'Canaritus',
+      'icon': [{
+        'src': 'images/icon-256x256.png',
+        'sizes': '256x256',
+        'type': 'image/png',
+      }],
+      'start_url': '/index.html',
+      'display': 'standalone',
+      'gcm_sender_id': config.notifications.gcm.project_number,
+    });
+  });
+
   app.post('/subscribe', (req, res) => {
     const id = req.body.id;
     if (!id) {

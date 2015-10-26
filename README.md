@@ -10,11 +10,10 @@ This tool needs to be served behind https for the chrome notifications to work.
 List of environment variables and what they're used for: 
 
 - `PORT`: The port to server the application on (default: 3000)
-- `SERVER_KEY`: The GCM server key, used for the notifications
-- `HOST_YAML`: The yaml hosts file (default: hosts.yaml)
+- `HOST_YAML`: The yaml hosts file (default: config.yaml)
 
 #### Automatic hosts uptime checks
-You need to configure what hosts to do automatic uptime checks on. See the `hosts.example.yaml` file to see how it's structured. The default configuration file should be called `hosts.yaml`
+You need to configure what hosts to do automatic uptime checks on. See the `config.example.yaml` file to see how it's structured. The default configuration file should be called `config.yaml`
 
 ### Running
 
@@ -22,7 +21,7 @@ You need to configure what hosts to do automatic uptime checks on. See the `host
 Fill in the hosts you want to monitor in hosts.yaml
 
 ```
-cp hosts.example.yaml hosts.yaml
+cp config.example.yaml config.yaml
 $EDITOR hosts.yaml
 ```
 
@@ -30,7 +29,7 @@ Install the dependencies and start the app!
 
 ```
 npm install
-SERVER_KEY=<YOUR_GCM_KEY_HERE> npm start
+npm start
 ```
 
 ### Attributions
