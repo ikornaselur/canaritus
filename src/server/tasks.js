@@ -50,8 +50,8 @@ module.exports = (config, utils, db) => {
     });
   };
 
-  Object.keys(config).map((key) => {
-    const host = config[key];
+  Object.keys(config.hosts).map((key) => {
+    const host = config.hosts[key];
     createHealthCheck(key, host.url, host.status, host.interval);
   });
 };
