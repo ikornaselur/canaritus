@@ -1,23 +1,23 @@
 default:
-  uptime-checks:
+  uptime_checks:
     native:
       enabled: true
     uptimerobot: # Not yet supported
       enabled: false
   hosts:
-    a-host:
+    a_host:
       url: 'http://example.com'
       status: 200
       interval: 60000
-    another-host:
+    another_host:
       url: 'http://example.com:1234'
       status: 200
       interval: 60000
   notifications:
     gcm:
       enabled: true
-      server-key: '<gcm_server_key>'
-      project-number: '<gcm_project_numer>'
+      server_key: '<gcm_server_key>'
+      project_number: '<gcm_project_numer>'
     pushover: # Not yet supported
       enabled: false
     pushbuller: # Not yet spported
