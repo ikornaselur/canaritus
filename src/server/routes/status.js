@@ -1,6 +1,6 @@
 module.exports = (app, db, config, addEvent, log) => {
   app.get('/status', (req, res) => {
-    const hosts = Object.keys(config);
+    const hosts = Object.keys(config.hosts);
     res.json(hosts);
   });
 
