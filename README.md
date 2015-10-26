@@ -18,9 +18,19 @@ You need to configure what hosts to do automatic uptime checks on. See the `host
 
 ### Running
 
+
+Fill in the hosts you want to monitor in hosts.yaml
+
+```
+cp hosts.example.yaml hosts.yaml
+$EDITOR hosts.yaml
+```
+
+Install the dependencies and start the app!
+
 ```
 npm install
-npm start
+SERVER_KEY=<YOUR_GCM_KEY_HERE> npm start
 ```
 
 ### Attributions
