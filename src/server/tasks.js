@@ -4,7 +4,7 @@ const fetch = require('node-fetch');
 module.exports = (config, utils, db) => {
   const healthCheck = (host, url, status) => {
     utils.log('UPTIME', `Health checking ${host}`);
-    return fetch(url).then((res) => {
+    return fetch(url, {timeout: 10000}).then((res) => {
       return res.status === status;
     }).catch(() => {
       return false;
