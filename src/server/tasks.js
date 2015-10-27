@@ -2,11 +2,12 @@ const PeriodicTask = require('periodic-task');
 const fetch = require('node-fetch');
 
 module.exports = (config, utils, db) => {
-  const healthCheck = (host, url, status) => {
-    utils.log('UPTIME', `Health checking ${host}`);
-    return fetch(url, {timeout: 10000}).then((res) => {
-      return res.status === status;
-    }).catch(() => {
+  const healthCheck = (hostName, host) => {
+    utils.log('UPTIME', `Health checking ${hostName} with timeout ${host.timeout}`);
+    return fetch(host.url, {timeout: host.timeout}).then((res) => {
+      return res.status === host.status;
+    }).catch((err) => {
+      log('UPTIME', 'Error: ' + err);
       return false;
     });
   };
@@ -16,35 +17,36 @@ module.exports = (config, utils, db) => {
   const unhealthyMsg = (host) => `${host} is down`;
   // TODO: Unhealthy msg to check for how long it was down?
 
-  const createHealthCheck = (host, url, status, interval) => {
-    utils.log('UPTIME', `Creating periodic task for ${host} with ${interval}ms interval`);
+  const createHealthCheck = (hostName, host) => {
+    utils.log('UPTIME', `Creating periodic task for ${hostName} with ${host.interval}ms interval`);
 
-    const healthTask = new PeriodicTask(interval, () => {
-      healthCheck(host, url, status).then((isHealthy) => {
-        if (healthy[host] === null) {
+    const healthTask = new PeriodicTask(host.interval, () => {
+      healthCheck(hostName, host).then((isHealthy) => {
+        if (healthy[hostName] === null) {
           // First check doesn't exist, so force the first check to create an event
-          healthy[host] = !isHealthy;
+          healthy[hostName] = !isHealthy;
         }
-        if (!isHealthy && healthy[host]) {
-          utils.addEvent(host, 'Automatic', isHealthy, 'Health degraded', unhealthyMsg(host), db);
-          healthy[host] = isHealthy;
-        } else if (isHealthy && !healthy[host]) {
-          utils.addEvent(host, 'Automatic', isHealthy, 'Health recovered', healthyMsg(host), db);
-          healthy[host] = isHealthy;
+        if (!isHealthy && healthy[hostName]) {
+          utils.addEvent(hostName, 'Automatic', isHealthy, 'Health degraded', unhealthyMsg(hostName), db);
+          healthy[hostName] = isHealthy;
+        } else if (isHealthy && !healthy[hostName]) {
+          utils.addEvent(hostName, 'Automatic', isHealthy, 'Health recovered', healthyMsg(hostName), db);
+          healthy[hostName] = isHealthy;
         }
       }).catch(() => {
-        if (healthy[host]) {
-          utils.addEvent(host, 'Automatic', false, 'Health degraded', unhealthyMsg(host), db);
-          healthy[host] = false;
+        if (healthy[hostName]) {
+          utils.addEvent(hostName, 'Automatic', false, 'Health degraded', unhealthyMsg(hostName), db);
+          healthy[hostName] = false;
         }
       });
     });
-    db.get(`SELECT host,healthy FROM events WHERE host='${host}' ORDER BY time DESC LIMIT 1`, (err, hostStatus) => {
+
+    db.get(`SELECT host,healthy FROM events WHERE host='${hostName}' ORDER BY time DESC LIMIT 1`, (err, hostStatus) => {
       if (err || !hostStatus) {
         utils.log('UPTIME', 'Failed to check last status of host, setting to first run to true to create first check');
-        healthy[host] = null;
+        healthy[hostName] = null;
       } else {
-        healthy[host] = hostStatus.healthy;
+        healthy[hostName] = hostStatus.healthy;
       }
       healthTask.run();
     });
@@ -52,6 +54,6 @@ module.exports = (config, utils, db) => {
 
   Object.keys(config.hosts).map((key) => {
     const host = config.hosts[key];
-    createHealthCheck(key, host.url, host.status, host.interval);
+    createHealthCheck(key, host);
   });
 };
