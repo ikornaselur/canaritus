@@ -5,9 +5,13 @@ module.exports = (config, utils, db) => {
   const healthCheck = (hostName, host) => {
     utils.log('UPTIME', `Health checking ${hostName} with timeout ${host.timeout}`);
     return fetch(host.url, {timeout: host.timeout}).then((res) => {
-      return res.status === host.status;
+      const expected = res.status === host.status;
+      if (!expected) {
+        utils.log('UPTIME', 'Unexpected status code: ' + res.status);
+      }
+      return expected;
     }).catch((err) => {
-      log('UPTIME', 'Error: ' + err);
+      utils.log('UPTIME', 'Error: ' + err);
       return false;
     });
   };
