@@ -23,7 +23,7 @@ module.exports = (db, config, gcmEndpoint) => {
           log('PUSH', 'Failed to select registration ids');
         } else {
           const ids = rows.map(x => x.id);
-          log('PUSH', 'Pushing to following ids: ' + ids);
+          log('PUSH', 'Pushing to following ids: ' + ids.map(x => x.substring(0, 10) + '...'));
           fetch(gcmEndpoint, {
             method: 'post',
             headers: {
