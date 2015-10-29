@@ -6,6 +6,8 @@ The application uses Google Push Notifications to notify users on those events e
 
 This tool needs to be served behind https for the chrome notifications to work.
 
+The plan is that the tool will be a status page for the web site, showing uptime stats for the web pages/services being monitored with a history of the event that have happened. The tool will support both automatic and manual events.
+
 ### Configuration
 List of environment variables and what they're used for: 
 
