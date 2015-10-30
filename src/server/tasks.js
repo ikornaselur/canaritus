@@ -54,7 +54,7 @@ module.exports = (config, utils, db) => {
         healthy[hostName] = null;
       } else {
         utils.log('UPTIME', `Setting last healthy status of host as healthy=${hostStatus.healthy}`);
-        healthy[hostName] = hostStatus.healthy;
+        healthy[hostName] = hostStatus.healthy === 'true';
       }
       healthTask.run();
     });
