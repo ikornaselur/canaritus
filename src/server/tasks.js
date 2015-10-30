@@ -4,8 +4,11 @@ const fetch = require('node-fetch');
 module.exports = (config, utils, db) => {
   const healthCheck = (hostName, host) => {
     utils.log('UPTIME', `Health checking ${hostName} with timeout ${host.timeout}`);
+    const sendTime = (new Date()).getTime();
     return fetch(host.url, {timeout: host.timeout}).then((res) => {
       const expected = res.status === host.status;
+      const responseTime = (new Date()).getTime() - sendTime;
+      utils.log('UPTIME', 'Response time: ' + responseTime + 'ms');
       if (!expected) {
         utils.log('UPTIME', 'Unexpected status code: ' + res.status);
       }
