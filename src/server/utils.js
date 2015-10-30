@@ -48,11 +48,11 @@ module.exports = (db, config, gcmEndpoint) => {
     log('EVENT', `Adding event for host ${host}: "${title}: ${body}"`);
 
     const fields = 'host, type, healthy, title, body, time';
-    const values = `'${host}', '${type}', '${healthy}', '${title}', '${body}', datetime('now')`;
+    const values = `'${host}', '${type}', '${healthy}', '${title}', '${body}', (SELECT strftime('%s', 'now'))`;
 
     db.run(`INSERT INTO events (${fields}) VALUES(${values})`, (err) => {
       if (err !== null) {
-        log('EVENT', 'Error adding event', err);
+        log('EVENT', 'Error adding event: ' + err);
         return false;
       }
       pingClients();
