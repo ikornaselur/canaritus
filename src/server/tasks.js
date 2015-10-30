@@ -53,6 +53,7 @@ module.exports = (config, utils, db) => {
         utils.log('UPTIME', 'Failed to check last status of host, setting to first run to true to create first check');
         healthy[hostName] = null;
       } else {
+        utils.log('UPTIME', `Setting last healthy status of host as healthy=${hostStatus.healthy}`);
         healthy[hostName] = hostStatus.healthy;
       }
       healthTask.run();
