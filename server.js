@@ -11,8 +11,11 @@ const app = Express();
 const httpServer = http.Server(app);
 const port = 3000;
 
+app.set('views', path.join(__dirname, 'src', 'server', 'views'));
+app.set('view engine', 'jade');
+
 /**
- * Initialize Database if required
+ * Initialize Database
  */
 const db = new Database('canaritus.db');
 db.serialize(() => {

@@ -4,7 +4,7 @@ import {Database} from 'sqlite3';
 
 import {log} from '../utils.js';
 
-const config = loadYaml(path.join(__dirname, '/../../../config.yaml'));
+const config = loadYaml(path.join(__dirname, '..', '..', '..', 'config.yaml'));
 
 export const getStatus = (req, res) => {
   const hosts = Object.keys(config.hosts);

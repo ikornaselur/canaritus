@@ -1,0 +1,11 @@
+doctype html
+html
+  head
+    title Canary Status
+  body
+    #app !{html}
+
+    script.
+      window.__INITIAL_STATE__ = !{initialState)
+
+    script(src='/bundle.js')

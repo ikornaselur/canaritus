@@ -1,10 +1,25 @@
 import path from 'path';
 import {load} from 'node-yaml-config';
 
-const config = load(path.join(__dirname, '/../../config.yaml'));
+import React from 'react';
+import ReactDOMServer from 'react-dom/server';
+import {createStore} from 'redux';
+import {Provider} from 'react-redux';
+
+import rootReducer from '../client/reducers';
+import CanaritusAppContainer from '../client/containers/CanaritusAppContainer';
+
+const config = load(path.join(__dirname, '..', '..', 'config.yaml'));
 
 export const handleRender = (req, res) => {
-  res.send('Hello, world!');
+  const store = createStore(rootReducer);
+  const html = ReactDOMServer.renderToString(
+    <Provider store={store}>
+      <CanaritusAppContainer />
+    </Provider>
+  );
+
+  res.render('index', {html: html, initialState: JSON.stringify(store.getState())});
 };
 
 export const manifest = (req, res) => {
