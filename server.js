@@ -48,4 +48,5 @@ app.get('/api/subsrcibe', api.subscribe);
 app.get('/api/unsubscribe', api.unsubscribe);
 app.get('/api/event', api.getEvent);
 
+console.log(`Listening on port ${port}`);
 httpServer.listen(port);
