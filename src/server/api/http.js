@@ -81,6 +81,7 @@ export const getEvent = (req, res) => {
         res.status(200).json({
           title: event.title,
           body: event.body,
+          healthy: event.healthy,
         });
       }
     });

@@ -8,6 +8,6 @@ const timeStamp = () => {
   return `${date} ${time}`;
 };
 
-export function log(type, string) {
+export const log = (type, string) => {
   console.log(`${timeStamp()} - ${type} - ${string}`);
-}
+};

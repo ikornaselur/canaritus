@@ -32,11 +32,6 @@ export default class Status extends Component {
 
     // We need the service worker registration to check for a subscription
     navigator.serviceWorker.ready.then((serviceWorkerRegistration) => {
-      // Are Notifications supported in the service worker?
-      if (!('showNotification' in serviceWorkerRegistration.prototype)) {
-        console.warn('Notifications aren\'t supported.');
-        return;
-      }
       // Do we already have a push message subscription?
       serviceWorkerRegistration.pushManager.getSubscription()
         .then((subscription) => {

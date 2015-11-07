@@ -3,13 +3,16 @@ import bodyParser from 'body-parser';
 import Express from 'express';
 import http from 'http';
 import {Database} from 'sqlite3';
+import {load as loadYaml} from 'node-yaml-config';
 
 import * as api from './src/server/api/http';
-import * as uni from './src/server/app.js';
+import * as uni from './src/server/app';
+import {createHealthCheck} from './src/server/tasks';
 
 const app = Express();
 const httpServer = http.Server(app);
 const port = 3000;
+const config = loadYaml(path.join(__dirname, 'config.yaml'));
 
 app.set('views', path.join(__dirname, 'src', 'server', 'views'));
 app.set('view engine', 'jade');
@@ -18,10 +21,8 @@ app.set('view engine', 'jade');
  * Initialize Database
  */
 const db = new Database('canaritus.db');
-db.serialize(() => {
-  db.run('CREATE TABLE IF NOT EXISTS ids (id TEXT, UNIQUE(id))');
-  db.run('CREATE TABLE IF NOT EXISTS events (host TEXT, type TEXT, healthy BOOLEAN, title TEXT, body TEXT, time DATETIME)');
-});
+db.run('CREATE TABLE IF NOT EXISTS ids (id TEXT, UNIQUE(id))');
+db.run('CREATE TABLE IF NOT EXISTS events (host TEXT, type TEXT, healthy BOOLEAN, title TEXT, body TEXT, time DATETIME)');
 db.close();
 
 /**
@@ -38,6 +39,14 @@ app.use(bodyParser.json());
  */
 app.get('/', uni.handleRender);
 app.get('/manifest.json', uni.manifest);
+
+/**
+ * Start the uptime healthchecks
+ */
+Object.keys(config.hosts).map((key) => {
+  const host = config.hosts[key];
+  createHealthCheck(key, host);
+});
 
 /**
  * Api endpoints
