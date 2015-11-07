@@ -44,8 +44,8 @@ app.get('/manifest.json', uni.manifest);
  */
 app.get('/api/status', api.getStatus);
 app.get('/api/status/:host', api.getHostStatus);
-app.get('/api/subsrcibe', api.subscribe);
-app.get('/api/unsubscribe', api.unsubscribe);
+app.post('/api/subscribe', api.subscribe);
+app.post('/api/unsubscribe', api.unsubscribe);
 app.get('/api/event', api.getEvent);
 
 console.log(`Listening on port ${port}`);

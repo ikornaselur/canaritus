@@ -14,7 +14,7 @@ gulp.task('webpack', function () {
     .pipe(webpack(require('./webpack.config.js')))
     .pipe(gulp.dest('dist'));
 
-  gulp.src('src/worker/*.js')
+  gulp.src('src/worker/service-worker.js')
     .pipe(sourcemaps.init())
     .pipe(babel())
     .pipe(concat('service-worker.js'))
@@ -25,6 +25,8 @@ gulp.task('webpack', function () {
 gulp.task('copy', function () {
   gulp.src('src/images/*.png')
     .pipe(gulp.dest('dist/images'));
+  gulp.src('src/worker/register-worker.js')
+    .pipe(gulp.dest('dist'));
 });
 
 gulp.task('watch', ['default'], function () {

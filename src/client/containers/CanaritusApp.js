@@ -1,20 +1,19 @@
-import React, {Component} from 'react';
-
-// import * as CanaritusActions from '../actions/CanaritusActions';
+import React, {Component, PropTypes} from 'react';
+import {Status} from '../components';
 
 export default class CanaritusApp extends Component {
-//   static propTypes = {
-//     error: React.PropTypes.any,
-//   };
+  static propTypes = {
+    error: PropTypes.any,
+    subscribed: PropTypes.bool,
+  };
 
   render() {
 //     const actions = {
 //     };
 
+
     return (
-      <div>
-        Hello, world! From React!
-      </div>
+      <Status />
     );
   }
 }

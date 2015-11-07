@@ -1,8 +1,7 @@
 /* eslint-env serviceworker */
-
 self.addEventListener('push', (event) => {
-  const icon = '/images/icon-256x256.png';
-  event.waitUntil(fetch('/event').then((res) => {
+  const icon = '/images/CanaryStatus_minus_256px.png';
+  event.waitUntil(fetch('/api/event').then((res) => {
     if (res.status !== 200) {
       console.log('Error fetching latest notification:', res.status);
       throw new Error();
@@ -45,7 +44,7 @@ self.addEventListener('notificationclick', (event) => {
   event.waitUntil(clients.matchAll({
     type: 'window',
   }).then((clientList) => {
-    for (let i = 0; i < clientList.length; i++) {
+    for (var i = 0; i < clientList.length; i++) { // eslint-disable-line no-var, vars-on-top
       const client = clientList[i];
       if (client.url === '/' && 'focus' in client) {
         return client.focus();

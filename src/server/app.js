@@ -27,7 +27,7 @@ export const manifest = (req, res) => {
     'name': 'Canaritus - Canary Status page',
     'short_name': 'Canaritus',
     'icon': [{
-      'src': 'images/icon-256x256.png',
+      'src': 'images/CanaryStatus_plus_256px.png',
       'sizes': '256x256',
       'type': 'image/png',
     }],
