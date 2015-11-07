@@ -71,7 +71,7 @@ export default class Status extends Component {
         .catch((e) => {
           if (Notification.permission === 'denied') {
             // The user denied
-            console.warn('Permission fro Notification was denied');
+            console.warn('Permission for Notification was denied');
             this.setState({
               subDisabled: true,
             });
@@ -87,7 +87,7 @@ export default class Status extends Component {
     });
   }
 
-  unsubscribe =() => {
+  unsubscribe = () => {
     navigator.serviceWorker.ready.then((swRegistration) => {
       swRegistration.pushManager.getSubscription().then((pushSub) => {
         // Check if we have a subcription to unsubscribe

@@ -7,7 +7,6 @@ import * as CanaritusActions from '../actions/CanaritusActions';
 const mapStateToProps = (state) => {
   return {
     error: state.error,
-    subscribed: state.subscribed,
   };
 };
 

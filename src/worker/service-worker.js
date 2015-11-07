@@ -12,7 +12,8 @@ self.addEventListener('push', (event) => {
       const healthy = data.healthy === 'true';
       const title = data.title;
       const body = data.body;
-      const tag = 'canaritus-notification-tag-' + healthy ? 'healthy' : 'unhealthy';
+      const tag = 'canaritus-notification-tag-' + (healthy ? 'healthy' : 'unhealthy');
+      console.log(tag);
 
       return self.registration.showNotification(title, {
         body: body,

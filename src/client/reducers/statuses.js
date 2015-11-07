@@ -4,7 +4,6 @@ import {
 
 const initialState = {
   error: null,
-  subscribed: false,
 };
 
 const statuses = (state = initialState, action) => {
