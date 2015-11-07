@@ -1,5 +1,4 @@
 export const sendSubscriptionChange = (subscription, type) => {
-  console.log('Sending subscription change');
   // TODO: Dispatch this as an action
   const {endpoint} = subscription;
   const id = endpoint.split('/')[endpoint.split('/').length - 1];

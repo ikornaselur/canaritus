@@ -9,8 +9,58 @@ export default class Status extends Component {
     this.state = {
       errors: [],
       subscribed: false,
-      subDisabled: false,
+      subDisabled: true,
     };
+  }
+
+  componentDidMount() {
+    this.initialSubscriptionState();
+  }
+
+  initialSubscriptionState = () => {
+    // Check current Notification permission.
+    if (Notification.permission === 'denied') {
+      console.warn('The user has blocked notifications.');
+      return;
+    }
+
+    // Check is push messaging is supported
+    if (!('PushManager' in window)) {
+      console.warn('Push messaging isn\'t supported.');
+      return;
+    }
+
+    // We need the service worker registration to check for a subscription
+    navigator.serviceWorker.ready.then((serviceWorkerRegistration) => {
+      // Are Notifications supported in the service worker?
+      if (!('showNotification' in serviceWorkerRegistration.prototype)) {
+        console.warn('Notifications aren\'t supported.');
+        return;
+      }
+      // Do we already have a push message subscription?
+      serviceWorkerRegistration.pushManager.getSubscription()
+        .then((subscription) => {
+          // Enable any UI which (un)subscribes from push messages
+          this.setState({
+            subDisabled: false,
+          });
+          if (!subscription) {
+            // We aren't subscribed to push
+            return;
+          }
+
+          // Keep your server in sync with the latest subscriptionID
+          sendSubscriptionChange(subscription, 'subscribe');
+
+          // Set your UI to show they have subscribed for push messages
+          this.setState({
+            subscribed: true,
+          });
+        })
+        .catch((err) => {
+          console.warn('Error during getSubscription()', err);
+        });
+    });
   }
 
   subscribe = () => {

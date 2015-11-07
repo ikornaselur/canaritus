@@ -1,6 +1,6 @@
 /* eslint-env serviceworker */
 self.addEventListener('push', (event) => {
-  const icon = '/images/CanaryStatus_minus_256px.png';
+  const icon = '/images/CanaryStatus_plus_256px.png';
   event.waitUntil(fetch('/api/event').then((res) => {
     if (res.status !== 200) {
       console.log('Error fetching latest notification:', res.status);
