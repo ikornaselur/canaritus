@@ -4,3 +4,4 @@ secrets
 canaritus.db
 config.yaml
 npm-debug.log
+.DS_Store

@@ -1,21 +1,23 @@
 /* eslint-env serviceworker */
-
 self.addEventListener('push', (event) => {
-  const icon = '/images/icon-256x256.png';
-  event.waitUntil(fetch('/event').then((res) => {
+  const plusIcon = '/images/CanaryStatus_plus_256px.png';
+  const minusIcon = '/images/CanaryStatus_minus_256px.png';
+  event.waitUntil(fetch('/api/event').then((res) => {
     if (res.status !== 200) {
       console.log('Error fetching latest notification:', res.status);
       throw new Error();
     }
 
     return res.json().then((data) => {
+      const healthy = data.healthy === 'true';
       const title = data.title;
       const body = data.body;
-      const tag = 'canaritus-notification-tag';
+      const tag = 'canaritus-notification-tag-' + (healthy ? 'healthy' : 'unhealthy');
+      console.log(tag);
 
       return self.registration.showNotification(title, {
         body: body,
-        icon: icon,
+        icon: data.healthy === 'true' ? plusIcon : minusIcon,
         tag: tag,
       });
     });
@@ -28,7 +30,7 @@ self.addEventListener('push', (event) => {
 
     return self.registration.showNotification(title, {
       body: body,
-      icon: icon,
+      icon: minusIcon,
       tag: tag,
     });
   }));
@@ -45,7 +47,7 @@ self.addEventListener('notificationclick', (event) => {
   event.waitUntil(clients.matchAll({
     type: 'window',
   }).then((clientList) => {
-    for (let i = 0; i < clientList.length; i++) {
+    for (var i = 0; i < clientList.length; i++) { // eslint-disable-line no-var, vars-on-top
       const client = clientList[i];
       if (client.url === '/' && 'focus' in client) {
         return client.focus();
