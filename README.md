@@ -9,22 +9,17 @@ This tool needs to be served behind https for the chrome notifications to work.
 The plan is that the tool will be a status page for the web site, showing uptime stats for the web pages/services being monitored with a history of the event that have happened. The tool will support both automatic and manual events.
 
 ### Configuration
-List of environment variables and what they're used for: 
-
-- `PORT`: The port to server the application on (default: 3000)
-- `HOST_YAML`: The yaml hosts file (default: config.yaml)
 
 #### Automatic hosts uptime checks
 You need to configure what hosts to do automatic uptime checks on. See the `config.example.yaml` file to see how it's structured. The default configuration file should be called `config.yaml`
 
 ### Running
 
-
 Fill in the hosts you want to monitor in hosts.yaml
 
 ```
 cp config.example.yaml config.yaml
-$EDITOR hosts.yaml
+$EDITOR config.yaml
 ```
 
 Install the dependencies and start the app!
@@ -33,7 +28,3 @@ Install the dependencies and start the app!
 npm install
 npm start
 ```
-
-### Attributions
-#### Canary Bird Notification Icon 
-*Made by [Freepik](http://www.freepik.com) from [www.flaticon.com](http://www.flaticon.com) and is licensed under [CC BY 3.0](http://creativecommons.org/licenses/by/3.0/)*
