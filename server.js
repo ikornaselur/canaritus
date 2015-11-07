@@ -43,10 +43,12 @@ app.get('/manifest.json', uni.manifest);
 /**
  * Start the uptime healthchecks
  */
-Object.keys(config.hosts).map((key) => {
-  const host = config.hosts[key];
-  createHealthCheck(key, host);
-});
+if (config.uptime_checks.native.enabled) {
+  Object.keys(config.hosts).map((key) => {
+    const host = config.hosts[key];
+    createHealthCheck(key, host);
+  });
+}
 
 /**
  * Api endpoints
