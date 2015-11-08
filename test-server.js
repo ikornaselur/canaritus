@@ -8,12 +8,13 @@ const handleRequest = (req, res) => {
     console.log(chunk.toString());
   });
   req.on('end', () => {
-    console.log('Ans in 2 seconds..');
+    const sec = 1;
+    console.log(`Ans in ${sec} seconds..`);
     setTimeout(() => {
       console.log('Ans');
       res.writeHead(200, 'OK', {'Content-Type': 'text/html'});
       res.end();
-    }, 1000);
+    }, sec * 1000);
   });
 };
 

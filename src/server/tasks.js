@@ -28,24 +28,41 @@ const healthCheck = (hostName, host) => {
 export const createHealthCheck = (hostName, host) => {
   log('UPTIME', `Creating periodic task for ${hostName} with ${host.interval}ms interval`);
 
-  new PeriodicTask(host.interval, () => {
-    healthCheck(hostName, host).then((isHealthy) => {
-      if (healthy[hostName] === null) {
-        // First check doesn't exist, so force the first check to create an event
-        healthy[hostName] = !isHealthy;
-      }
-      if (!isHealthy && healthy[hostName]) {
+  let retries = host.retry;
+  const handleTaskCatch = () => {
+    if (healthy[hostName]) {
+      addEvent(hostName, 'Automatic', false, 'Health degraded', unhealthyMsg(hostName));
+      healthy[hostName] = false;
+    }
+  };
+
+  const handleTaskReturn = (isHealthy) => {
+    if (healthy[hostName] === null) {
+      // First check doesn't exist, so force the first check to create an event
+      healthy[hostName] = !isHealthy;
+    }
+    if (!isHealthy && healthy[hostName]) {
+      // Check if retry
+      if (retries > 0) {
+        retries -= 1;
+        log('UPTIME', `Uptime check failed. Retrying ${retries} more times..`);
+        // Retry in 500ms
+        setTimeout(() => {
+          healthCheck(hostName, host).then(handleTaskReturn).catch(handleTaskCatch);
+        }, 500);
+      } else {
         addEvent(hostName, 'Automatic', isHealthy, 'Health degraded', unhealthyMsg(hostName));
         healthy[hostName] = isHealthy;
-      } else if (isHealthy && !healthy[hostName]) {
-        addEvent(hostName, 'Automatic', isHealthy, 'Health recovered', healthyMsg(hostName));
-        healthy[hostName] = isHealthy;
       }
-    }).catch(() => {
-      if (healthy[hostName]) {
-        addEvent(hostName, 'Automatic', false, 'Health degraded', unhealthyMsg(hostName));
-        healthy[hostName] = false;
-      }
-    });
-  }).run();
+    } else if (isHealthy && !healthy[hostName]) {
+      retries = host.retry;
+      addEvent(hostName, 'Automatic', isHealthy, 'Health recovered', healthyMsg(hostName));
+      healthy[hostName] = isHealthy;
+    }
+  };
+
+  const task = () => {
+    healthCheck(hostName, host).then(handleTaskReturn).catch(handleTaskCatch);
+  };
+  new PeriodicTask(host.interval, task).run();
 };
