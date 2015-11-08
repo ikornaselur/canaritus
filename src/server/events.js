@@ -28,7 +28,7 @@ const pingClients = () => {
               'registration_ids': ids,
             }),
           }).then((res) => {
-            log('PUSH', 'Notification pings sent, status:', res.status);
+            log('PUSH', 'Notification pings sent, status: ' + res.status);
           });
         }
       });
