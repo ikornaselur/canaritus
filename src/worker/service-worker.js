@@ -17,7 +17,7 @@ self.addEventListener('push', (event) => {
 
       return self.registration.showNotification(title, {
         body: body,
-        icon: data.healthy === 'true' ? plusIcon : minusIcon,
+        icon: healthy ? plusIcon : minusIcon,
         tag: tag,
       });
     });

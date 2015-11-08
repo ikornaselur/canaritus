@@ -1,12 +1,19 @@
-import {log} from './utils';
+import {log, timeDuration} from './utils';
 import {addEvent} from './events';
 
 import fetch from 'node-fetch';
 import PeriodicTask from 'periodic-task';
 
-const healthy = {};
-const healthyMsg = (host) => `${host} is back up`;
-const unhealthyMsg = (host) => `${host} is down`;
+const hostStatus = {};
+const healthyMsg = (host, down) => {
+  const now = new Date().getTime();
+  if (!down) {
+    return `${host} is back up.`;
+  }
+  const duration = timeDuration(now - down);
+  return `${host} is back up. It was down for ${duration}.`;
+};
+const unhealthyMsg = (host) => `${host} is down.`;
 
 const healthCheck = (hostName, host) => {
   log('UPTIME', `Health checking ${hostName} with timeout ${host.timeout}`);
@@ -30,18 +37,23 @@ export const createHealthCheck = (hostName, host) => {
 
   let retries = host.retry;
   const handleTaskCatch = () => {
-    if (healthy[hostName]) {
+    if (hostStatus[hostName].healthy) {
       addEvent(hostName, 'Automatic', false, 'Health degraded', unhealthyMsg(hostName));
-      healthy[hostName] = false;
+      hostStatus[hostName] = {
+        healthy: false,
+        down: new Date().getTime(),
+      };
     }
   };
 
   const handleTaskReturn = (isHealthy) => {
-    if (healthy[hostName] === null) {
+    if (hostStatus[hostName] === undefined) {
       // First check doesn't exist, so force the first check to create an event
-      healthy[hostName] = !isHealthy;
+      hostStatus[hostName] = {
+        healthy: !isHealthy,
+      };
     }
-    if (!isHealthy && healthy[hostName]) {
+    if (!isHealthy && hostStatus[hostName].healthy) {
       // Check if retry
       if (retries > 0) {
         retries -= 1;
@@ -52,12 +64,15 @@ export const createHealthCheck = (hostName, host) => {
         }, 500);
       } else {
         addEvent(hostName, 'Automatic', isHealthy, 'Health degraded', unhealthyMsg(hostName));
-        healthy[hostName] = isHealthy;
+        hostStatus[hostName] = {
+          healthy: isHealthy,
+          down: new Date().getTime(),
+        };
       }
-    } else if (isHealthy && !healthy[hostName]) {
+    } else if (isHealthy && !hostStatus[hostName].healthy) {
       retries = host.retry;
-      addEvent(hostName, 'Automatic', isHealthy, 'Health recovered', healthyMsg(hostName));
-      healthy[hostName] = isHealthy;
+      addEvent(hostName, 'Automatic', isHealthy, 'Health recovered', healthyMsg(hostName, hostStatus[hostName].down));
+      hostStatus[hostName].healthy = isHealthy;
     }
   };
 

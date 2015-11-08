@@ -1,3 +1,5 @@
+import moment from 'moment';
+
 const timeStamp = () => {
   const now = new Date();
   const twoNum = (num) => {
@@ -10,4 +12,24 @@ const timeStamp = () => {
 
 export const log = (type, string) => {
   console.log(`${timeStamp()} - ${type} - ${string}`);
+};
+
+export const timeDuration = (ms) => {
+  const duration = moment.duration(ms);
+  let ret = '';
+  let days = false;
+  let hours = false;
+  if (duration.days() > 0) {
+    ret = `${duration.days()} day${duration.days() === 1 ? '' : 's'}, `;
+    days = true;
+  }
+  if (duration.hours() || days) {
+    ret += `${duration.hours()} hour${duration.hours() === 1 ? '' : 's'}, `;
+    hours = true;
+  }
+  if (duration.minutes() || hours) {
+    ret += `${duration.minutes()} minute${duration.minutes() === 1 ? '' : 's'}, `;
+  }
+  ret += `and ${duration.seconds()} second${duration.seconds() === 1 ? '' : 's'}`;
+  return ret;
 };
