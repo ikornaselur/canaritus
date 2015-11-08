@@ -5,8 +5,9 @@
   "main": "src/server/server.js",
   "scripts": {
     "server": "node server.babel.js",
-    "build": "gulp watch",
-    "start": "gulp && node server.babel.js"
+    "build": "gulp",
+    "build-watch": "gulp watch",
+    "start": "npm run build && npm run server"
   },
   "repository": {
     "type": "git",
