@@ -4,4 +4,4 @@ export const getStatus = () => {
   return {
     type: types.GET_STATUS,
   };
-}
+};
