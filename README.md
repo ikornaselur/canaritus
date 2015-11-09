@@ -1,4 +1,4 @@
-# Canaritus
+# Canaritus ![status](https://travis-ci.org/Ikornaselur/canaritus.svg?branch=master)
 
 "Canary status" -> "Canaritus" - A simple self-hosted uptime status page with which supports automatic uptime checks and allows users to subscribe to notifications on uptime event changes. 
 
