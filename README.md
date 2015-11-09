@@ -1,4 +1,4 @@
-# Canaritus ![status](https://codeship.com/projects/114529/status?branch=master)
+# Canaritus ![status](https://codeship.com/projects/63a924d0-6961-0133-5ef7-666650db048e/status?branch=master)
 
 "Canary status" -> "Canaritus" - A simple self-hosted uptime status page with which supports automatic uptime checks and allows users to subscribe to notifications on uptime event changes. 
 
