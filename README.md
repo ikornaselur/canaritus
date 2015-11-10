@@ -15,7 +15,7 @@ You need to configure what hosts to do automatic uptime checks on. See the `conf
 
 ### Running
 
-Fill in the hosts you want to monitor in hosts.yaml
+Fill in the hosts you want to monitor in config.yaml
 
 ```
 cp config.example.yaml config.yaml
