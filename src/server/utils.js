@@ -16,20 +16,24 @@ export const log = (type, string) => {
 
 export const timeDuration = (ms) => {
   const duration = moment.duration(ms);
-  let ret = '';
-  let days = false;
-  let hours = false;
+  const values = [];
   if (duration.days() > 0) {
-    ret = `${duration.days()} day${duration.days() === 1 ? '' : 's'}, `;
-    days = true;
+    values.push(`${duration.days()} day${duration.days() === 1 ? '' : 's'}`);
   }
-  if (duration.hours() || days) {
-    ret += `${duration.hours()} hour${duration.hours() === 1 ? '' : 's'}, `;
-    hours = true;
+  if (duration.hours()) {
+    values.push(`${duration.hours()} hour${duration.hours() === 1 ? '' : 's'}`);
   }
-  if (duration.minutes() || hours) {
-    ret += `${duration.minutes()} minute${duration.minutes() === 1 ? '' : 's'}, `;
+  if (duration.minutes()) {
+    values.push(`${duration.minutes()} minute${duration.minutes() === 1 ? '' : 's'}`);
   }
-  ret += `and ${duration.seconds()} second${duration.seconds() === 1 ? '' : 's'}`;
-  return ret;
+  if (duration.seconds()) {
+    values.push(`${duration.seconds()} second${duration.seconds() === 1 ? '' : 's'}`);
+  }
+
+  if (values.length === 1) {
+    return values[0];
+  }
+  const end = ` and ${values.pop()}`;
+
+  return values.join(', ') + end;
 };

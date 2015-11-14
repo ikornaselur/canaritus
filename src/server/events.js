@@ -1,14 +1,16 @@
 import path from 'path';
 import fetch from 'node-fetch';
+import Express from 'express';
 import {log} from './utils';
 import {Database} from 'sqlite3';
 import {load as loadYaml} from 'node-yaml-config';
 
+const dbName = Express().get('dbName');
 const config = loadYaml(path.join(__dirname, '..', '..', 'config.yaml'));
 
 const pingClients = () => {
   if (config.notifications.gcm.enabled) {
-    const db = new Database('canaritus.db');
+    const db = new Database(dbName);
     log('PUSH', 'Pinging all clients');
     db.serialize(() => {
       db.all('SELECT * FROM ids', (err, rows) => {
@@ -41,7 +43,7 @@ const pingClients = () => {
 
 export const addEvent = (host, type, healthy, title, body) => {
   log('EVENT', `Adding event for host ${host}: "${title}: ${body}"`);
-  const db = new Database('canaritus.db');
+  const db = new Database(dbName);
 
   const fields = 'host, type, healthy, title, body, time';
   const values = `'${host}', '${type}', '${healthy}', '${title}', '${body}', (SELECT strftime('%s', 'now'))`;

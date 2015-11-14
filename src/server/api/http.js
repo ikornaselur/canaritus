@@ -3,7 +3,9 @@ import {load as loadYaml} from 'node-yaml-config';
 import {Database} from 'sqlite3';
 
 import {log} from '../utils.js';
+import Express from 'express';
 
+const dbName = Express().get('dbName');
 const config = loadYaml(path.join(__dirname, '..', '..', '..', 'config.yaml'));
 
 export const getStatus = (req, res) => {
@@ -12,7 +14,7 @@ export const getStatus = (req, res) => {
 };
 
 export const getHostStatus = (req, res) => {
-  const db = new Database('canaritus.db');
+  const db = new Database(dbName);
   const host = req.params.host;
 
   db.serialize(() => {
@@ -30,7 +32,7 @@ export const getHostStatus = (req, res) => {
 };
 
 export const subscribe = (req, res) => {
-  const db = new Database('canaritus.db');
+  const db = new Database(dbName);
   const id = req.body.id;
   if (!id) {
     res.status(400).send('id is missing from the post');
@@ -51,7 +53,7 @@ export const subscribe = (req, res) => {
 };
 
 export const unsubscribe = (req, res) => {
-  const db = new Database('canaritus.db');
+  const db = new Database(dbName);
   const id = req.body.id;
   if (!id) {
     res.status(400).send('id is missing from the post');
@@ -72,7 +74,7 @@ export const unsubscribe = (req, res) => {
 };
 
 export const getEvent = (req, res) => {
-  const db = new Database('canaritus.db');
+  const db = new Database(dbName);
   db.serialize(() => {
     db.get('SELECT * FROM events ORDER BY time DESC LIMIT 1', (err, event) => {
       if (err !== null) {

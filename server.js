@@ -16,11 +16,12 @@ const config = loadYaml(path.join(__dirname, 'config.yaml'));
 
 app.set('views', path.join(__dirname, 'src', 'server', 'views'));
 app.set('view engine', 'jade');
+app.set('dbName', process.env.DB_NAME || 'canaritus.db');
 
 /**
  * Initialize Database
  */
-const db = new Database('canaritus.db');
+const db = new Database(app.get('dbName'));
 db.run('CREATE TABLE IF NOT EXISTS ids (id TEXT, UNIQUE(id))');
 db.run('CREATE TABLE IF NOT EXISTS events (host TEXT, type TEXT, healthy BOOLEAN, title TEXT, body TEXT, time DATETIME)');
 db.close();
