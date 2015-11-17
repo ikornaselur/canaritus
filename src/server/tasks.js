@@ -36,6 +36,7 @@ export const createHealthCheck = (hostName, host) => {
   log('UPTIME', `Creating periodic task for ${hostName} with ${host.interval}ms interval`);
 
   let retries = host.retry;
+  let retrying = false;
   const handleTaskCatch = () => {
     if (hostStatus[hostName].healthy) {
       addEvent(hostName, 'Automatic', false, 'Health degraded', unhealthyMsg(hostName));
@@ -56,6 +57,7 @@ export const createHealthCheck = (hostName, host) => {
     if (!isHealthy && hostStatus[hostName].healthy) {
       // Check if retry
       if (retries > 0) {
+        retrying = true;
         retries -= 1;
         log('UPTIME', `Uptime check failed. Retrying ${retries} more times..`);
         // Retry in 500ms
@@ -73,6 +75,11 @@ export const createHealthCheck = (hostName, host) => {
       retries = host.retry;
       addEvent(hostName, 'Automatic', isHealthy, 'Health recovered', healthyMsg(hostName, hostStatus[hostName].down));
       hostStatus[hostName].healthy = isHealthy;
+    }
+    // Reset retrying if applicable
+    if (isHealthy && hostStatus[hostName].healthy && retrying) {
+      retrying = false;
+      retries = host.retry;
     }
   };
 
