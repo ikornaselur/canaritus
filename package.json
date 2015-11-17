@@ -9,6 +9,7 @@
     "build-watch": "gulp watch",
     "start": "npm run build && npm run server",
     "lint": "eslint src; exit 0",
+    "test:lint": "eslint src",
     "test": "eslint src"
   },
   "repository": {
