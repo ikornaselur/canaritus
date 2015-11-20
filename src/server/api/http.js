@@ -3,6 +3,7 @@ import {load as loadYaml} from 'node-yaml-config';
 import {Database} from 'sqlite3';
 
 import {log} from '../utils.js';
+import {addEvent} from '../events';
 
 const config = loadYaml(path.join(__dirname, '..', '..', '..', 'config.yaml'));
 
@@ -87,4 +88,17 @@ export const getEvent = (req, res) => {
     });
   });
   db.close();
+};
+
+export const postEvent = (req, res) => {
+  const {host, type, healthy, title, body} = req.body;
+  const requiredMissing = [host, type, healthy, title, body]
+    .map((x) => typeof x === 'undefined')
+    .find((x) => x);
+  if (requiredMissing) {
+    res.status(400).send('The following fields are required: title, body, host, type and healthy');
+  } else {
+    addEvent(host, type, healthy, title, body);
+    res.sendStatus(201);
+  }
 };
