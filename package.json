@@ -6,7 +6,7 @@
   "scripts": {
     "server": "node server.babel.js",
     "build": "gulp",
-    "build-watch": "gulp watch",
+    "build:watch": "gulp watch",
     "start": "npm run build && npm run server",
     "lint": "eslint src; exit 0",
     "test:lint": "eslint src",
