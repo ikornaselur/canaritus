@@ -4,6 +4,8 @@ import {addEvent} from './events';
 import fetch from 'node-fetch';
 import PeriodicTask from 'periodic-task';
 
+const RETRY_TIMEOUT = 500;
+
 const hostStatus = {};
 const healthyMsg = (host, down) => {
   const now = new Date().getTime();
@@ -16,9 +18,9 @@ const healthyMsg = (host, down) => {
 const unhealthyMsg = (host) => `${host} is down.`;
 
 const healthCheck = (hostName, host) => {
-  log('UPTIME', `Health checking ${hostName} with timeout ${host.timeout}`);
+  log('UPTIME', `Health checking ${hostName} with ${host.timeout}s timeout`);
   const sendTime = (new Date()).getTime();
-  return fetch(host.url, {timeout: host.timeout}).then((res) => {
+  return fetch(host.url, {timeout: host.timeout * 1000}).then((res) => {
     const expected = res.status === host.status;
     const responseTime = (new Date()).getTime() - sendTime;
     log('UPTIME', 'Response time: ' + responseTime + 'ms');
@@ -33,7 +35,7 @@ const healthCheck = (hostName, host) => {
 };
 
 export const createHealthCheck = (hostName, host) => {
-  log('UPTIME', `Creating periodic task for ${hostName} with ${host.interval}ms interval`);
+  log('UPTIME', `Creating periodic task for ${hostName} with ${host.interval}s interval`);
 
   let retries = host.retry;
   let retrying = false;
@@ -58,12 +60,12 @@ export const createHealthCheck = (hostName, host) => {
       // Check if retry
       if (retries > 0) {
         retrying = true;
-        retries -= 1;
         log('UPTIME', `Uptime check failed. Retrying ${retries} more times..`);
+        retries -= 1;
         // Retry in 500ms
         setTimeout(() => {
           healthCheck(hostName, host).then(handleTaskReturn).catch(handleTaskCatch);
-        }, 500);
+        }, RETRY_TIMEOUT);
       } else {
         addEvent(hostName, 'Automatic', isHealthy, 'Health degraded', unhealthyMsg(hostName));
         hostStatus[hostName] = {
@@ -86,5 +88,5 @@ export const createHealthCheck = (hostName, host) => {
   const task = () => {
     healthCheck(hostName, host).then(handleTaskReturn).catch(handleTaskCatch);
   };
-  new PeriodicTask(host.interval, task).run();
+  new PeriodicTask(host.interval * 1000, task).run();
 };

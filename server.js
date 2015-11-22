@@ -58,6 +58,7 @@ app.get('/api/status/:host', api.getHostStatus);
 app.post('/api/subscribe', api.subscribe);
 app.post('/api/unsubscribe', api.unsubscribe);
 app.get('/api/event', api.getEvent);
+app.post('/api/event', api.postEvent);
 
 console.log(`Listening on port ${port}`);
 httpServer.listen(port);
