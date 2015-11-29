@@ -1,10 +1,11 @@
 {
   "name": "canaritus",
-  "version": "0.8.0",
+  "version": "0.8.4",
   "description": "A status page with native push notifications to subscribers",
   "main": "src/server/server.js",
   "scripts": {
     "server": "node server.babel.js",
+    "server:watch": "nodemon server.babel.js -w src",
     "build": "gulp",
     "build:watch": "gulp watch",
     "start": "npm run build && npm run server",
