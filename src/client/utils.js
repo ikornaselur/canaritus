@@ -8,8 +8,6 @@ export const sendSubscriptionChange = (subscription, type) => {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({
-      id: id,
-    }),
+    body: JSON.stringify(subscription),
   });
 };

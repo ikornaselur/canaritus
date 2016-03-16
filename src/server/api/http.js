@@ -32,15 +32,17 @@ export const getHostStatus = (req, res) => {
 
 export const subscribe = (req, res) => {
   const db = new Database('canaritus.db');
-  const id = req.body.id;
-  if (!id) {
-    res.status(400).send('id is missing from the post');
+  const {endpoint, keys} = req.body;
+  if (!endpoint) {
+    res.status(421).send('id is missing from the post');
+  } else if (!keys || !keys.p256dh || !keys.auth) {
+    res.status(421).send('keys are missing fromt he post');
   } else {
-    log('DB', `Adding ${id} to ids table`);
+    log('DB', `Adding ${endpoint} to subscriptions table`);
     db.serialize(() => {
-      db.run(`INSERT OR IGNORE INTO ids (id) VALUES('${id}')`, (err) => {
+      db.run(`INSERT OR IGNORE INTO subscriptions (endpoint, p256dh, auth) VALUES('${endpoint}', '${keys.p256dh}', '${keys.auth}')`, (err) => {
         if (err !== null) {
-          log('DB', 'Error adding id', err);
+          log('DB', 'Error adding subscription', err);
           res.sendStatus(500);
         } else {
           res.sendStatus(201);
