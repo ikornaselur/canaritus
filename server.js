@@ -54,7 +54,6 @@ if (config.uptime_checks.native.enabled) {
  * Api endpoints
  */
 app.get('/api/status', api.getStatus);
-app.get('/api/status/:host', api.getHostStatus);
 app.post('/api/subscribe', api.subscribe);
 app.post('/api/unsubscribe', api.unsubscribe);
 app.get('/api/event', api.getEvent);

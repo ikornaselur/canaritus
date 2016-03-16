@@ -12,24 +12,6 @@ export const getStatus = (req, res) => {
   res.json(hosts);
 };
 
-export const getHostStatus = (req, res) => {
-  const db = new Database('canaritus.db');
-  const host = req.params.host;
-
-  db.serialize(() => {
-    db.all(`SELECT * FROM events WHERE host='${host}'`, (err, events) => {
-      if (err) {
-        res.status(500).send('Unable to get events');
-      } else if (events.length === 0) {
-        res.sendStatus(404);
-      } else {
-        res.status(200).json(events);
-      }
-    });
-  });
-  db.close();
-};
-
 export const subscribe = (req, res) => {
   const db = new Database('canaritus.db');
   const {endpoint, keys} = req.body;
@@ -55,13 +37,13 @@ export const subscribe = (req, res) => {
 
 export const unsubscribe = (req, res) => {
   const db = new Database('canaritus.db');
-  const id = req.body.id;
-  if (!id) {
-    res.status(400).send('id is missing from the post');
+  const {endpoint} = req.body;
+  if (!endpoint) {
+    res.status(421).send('endpoint is missing from the post');
   } else {
-    log('DB', `Removing ${id} from ids table`);
+    log('DB', `Removing ${endpoint} from subscriptions table`);
     db.serialize(() => {
-      db.run(`DELETE FROM ids WHERE id='${id}'`, (err) => {
+      db.run(`DELETE FROM subscriptions WHERE endpoint='${endpoint}'`, (err) => {
         if (err !== null) {
           log('DB', 'Error removing id', err);
           res.sendStatus(500);
