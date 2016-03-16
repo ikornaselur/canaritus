@@ -6,10 +6,10 @@ import {gcmNotification, developmentNotification} from './notifications';
 
 const config = loadYaml(path.join(__dirname, '..', '..', 'config.yaml'));
 
-const pingClients = (title, body) => {
+const pingClients = (title, body, healthy) => {
   const {gcm, development} = config.notifications;
   if (gcm.enabled) {
-    gcmNotification(config);
+    gcmNotification(config, title, body, healthy);
   }
   if (development.enabled) {
     developmentNotification(title, body);
@@ -29,7 +29,7 @@ export const addEvent = (host, type, healthy, title, body) => {
         log('EVENT', 'Error adding event: ' + err);
         return false;
       }
-      pingClients(title, body);
+      pingClients(title, body, healthy);
       return true;
     });
   });

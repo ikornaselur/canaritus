@@ -1,6 +1,6 @@
 {
   "name": "canaritus",
-  "version": "0.8.4",
+  "version": "0.8.5",
   "description": "A status page with native push notifications to subscribers",
   "main": "src/server/server.js",
   "scripts": {
@@ -60,6 +60,7 @@
     "redux-thunk": "1.0.0",
     "serve-static": "^1.10.0",
     "sqlite3": "^3.1.0",
+    "web-push-encryption": "github:googlechrome/push-encryption-node",
     "webpack": "1.12.2"
   }
 }

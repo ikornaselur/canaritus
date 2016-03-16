@@ -10,8 +10,12 @@ const timeStamp = () => {
   return `${date} ${time}`;
 };
 
-export const log = (type, string) => {
-  console.log(`${timeStamp()} - ${type} - ${string}`);
+export const log = (type, string, extra = null) => {
+  let out = `${timeStamp()} - ${type} - ${string}`;
+  if (extra) {
+    out += ` - ${extra}`;
+  }
+  console.log(out);
 };
 
 export const timeDuration = (ms) => {
