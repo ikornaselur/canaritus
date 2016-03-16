@@ -1,24 +1,18 @@
 /* eslint-env serviceworker */
 self.addEventListener('push', (event) => {
-  const plusIcon = '/images/CanaryStatus_plus_256px.png';
-  const minusIcon = '/images/CanaryStatus_minus_256px.png';
-
   if (event.data) {
     const {title} = event.data.json();
     return self.registration.showNotification(title, event.data.json());
-  } else {
-    console.error('Unable to retrieve data', err);
-
-    const title = 'An error occurred';
-    const body = 'We were unable to get the information for this push message';
-    const tag = 'notification-error';
-
-    return self.registration.showNotification(title, {
-      body: body,
-      icon: minusIcon,
-      tag: tag,
-    });
   }
+  const title = 'An error occurred';
+  const body = 'We were unable to get the information for this push message';
+  const tag = 'notification-error';
+
+  return self.registration.showNotification(title, {
+    body: body,
+    icon: '/images/CanaryStatus_minus_256px.png',
+    tag: tag,
+  });
 });
 
 self.addEventListener('notificationclick', (event) => {

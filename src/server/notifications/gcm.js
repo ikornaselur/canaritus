@@ -1,4 +1,3 @@
-import fetch from 'node-fetch';
 import {log} from '../utils';
 import {Database} from 'sqlite3';
 import {sendWebPush} from 'web-push-encryption';
@@ -12,9 +11,9 @@ const generateSubscription = (row) => {
     keys: {
       p256dh: row.p256dh,
       auth: row.auth,
-    }
-  }
-}
+    },
+  };
+};
 
 const gcmNotification = (config, title, body, healthy) => {
   const message = JSON.stringify({
@@ -33,10 +32,13 @@ const gcmNotification = (config, title, body, healthy) => {
       } else {
         const subscriptions = rows.map(x => generateSubscription(x));
         log('PUSH', `Pushing to ${subscriptions.length} subscriptions`);
+
+        const handlePushResult = (res) => {
+          log('PUSH', 'Notification ping sent, status: ' + res.status);
+        };
+
         for (const sub of subscriptions) {
-          sendWebPush(message, sub).then((res) => {
-            log('PUSH', 'Notification ping sent, status: ' + res.status);
-          });
+          sendWebPush(message, sub).then(handlePushResult);
         }
       }
     });
