@@ -18,9 +18,8 @@ default:
   notifications:
     gcm:
       enabled: true
-      server_key: '<gcm_server_key>'
+      auth_token: '<gcm_server_key>'
       project_number: '<gcm_project_numer>'
-      endpoint: 'https://android.googleapis.com/gcm/send'
     pushover: # Not yet supported
       enabled: false
     pushbuller: # Not yet spported
