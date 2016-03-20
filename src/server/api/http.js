@@ -2,7 +2,7 @@ import path from 'path';
 import {load as loadYaml} from 'node-yaml-config';
 import {Database} from 'sqlite3';
 
-import {log} from '../utils.js';
+import {log} from '../utils';
 import {addEvent} from '../events';
 
 const config = loadYaml(path.join(__dirname, '..', '..', '..', 'config.yaml'));

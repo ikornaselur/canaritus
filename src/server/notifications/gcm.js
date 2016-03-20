@@ -34,7 +34,7 @@ export const notify = (title, body, healthy) => {
   db.serialize(() => {
     db.all('SELECT * FROM subscriptions', (err, rows) => {
       if (err !== null) {
-        log('PUSH', 'Failed to select registration ids');
+        log('DB', 'Failed get all push registrations from db', err);
       } else {
         const subscriptions = rows.map(x => generateSubscription(x));
         log('PUSH', `Pushing to ${subscriptions.length} subscriptions`);

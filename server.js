@@ -5,7 +5,7 @@ import http from 'http';
 import {Database} from 'sqlite3';
 import {load as loadYaml} from 'node-yaml-config';
 
-import * as api from './src/server/api/http';
+import * as api from './src/server/api';
 import * as uni from './src/server/app';
 import {createHealthCheck} from './src/server/tasks';
 
@@ -23,10 +23,13 @@ app.set('view engine', 'jade');
 /**
  * Initialize Database
  */
+/* eslint-disable max-len */
 const db = new Database('canaritus.db');
 db.run('CREATE TABLE IF NOT EXISTS subscriptions (endpoint TEXT, p256dh TEXT, auth TEXT, UNIQUE(endpoint))');
 db.run('CREATE TABLE IF NOT EXISTS events (host TEXT, type TEXT, healthy BOOLEAN, title TEXT, body TEXT, time DATETIME)');
+db.run('CREATE TABLE IF NOT EXISTS emails (email TEXT, hash TEXT NOT NULL, verified BOOLEAN DEFAULT false, UNIQUE(email))');
 db.close();
+/* eslint-enable */
 
 /**
  * Server middleware
@@ -47,20 +50,25 @@ app.get('/manifest.json', uni.manifest);
  * Start the uptime healthchecks
  */
 if (config.uptime_checks.native.enabled) {
-  Object.keys(config.hosts).map((key) => {
+  for (const key of Object.keys(config.hosts)) {
     const host = config.hosts[key];
     createHealthCheck(key, host);
-  });
+  }
 }
 
 /**
  * Api endpoints
  */
-app.get('/api/status', api.getStatus);
-app.post('/api/subscribe', api.subscribe);
-app.post('/api/unsubscribe', api.unsubscribe);
-app.get('/api/event', api.getEvent);
-app.post('/api/event', api.postEvent);
+app.get('/api/status', api.http.getStatus);
+app.post('/api/subscribe', api.http.subscribe);
+app.post('/api/unsubscribe', api.http.unsubscribe);
+app.get('/api/event', api.http.getEvent);
+app.post('/api/event', api.http.postEvent);
+
+// Email endpoints
+app.get('/api/email/verify/:hash', api.email.verify);
+app.post('/api/email/subscribe', api.email.subscribe);
+app.post('/api/email/unsubscribe', api.email.unsubscribe);
 
 console.log(`Listening on port ${port}`);
 httpServer.listen(port);
