@@ -18,7 +18,7 @@ export const verify = (req, res) => {
       if (err !== null) {
         log('DB', `Error updating "verify" on ${email}`, err);
       } else {
-        res.status(200).send(email);
+        res.sendStatus(200);
       }
     });
     db.close();
@@ -55,5 +55,20 @@ export const subscribe = (req, res) => {
 };
 
 export const unsubscribe = (req, res) => {
-  console.log(req, res);
+  const {hash} = req.params;
+  const email = AES.decrypt(hash, config.secret).toString(encoding.Utf8);
+  if (email.length === 0) {
+    res.sendStatus(421);
+  } else {
+    const db = new Database('canaritus.db');
+    db.run('DELETE FROM emails WHERE email=$email', {$email: email}, (err) => {
+      if (err !== null) {
+        log('DB', 'Error deleting email from db', err);
+        res.sendStatus(500);
+      } else {
+        res.sendStatus(200);
+      }
+    });
+    db.close();
+  }
 };

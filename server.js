@@ -67,8 +67,8 @@ app.post('/api/event', api.http.postEvent);
 
 // Email endpoints
 app.get('/api/email/verify/:hash', api.email.verify);
+app.get('/api/email/unsubscribe/:hash', api.email.unsubscribe);
 app.post('/api/email/subscribe', api.email.subscribe);
-app.post('/api/email/unsubscribe', api.email.unsubscribe);
 
 console.log(`Listening on port ${port}`);
 httpServer.listen(port);
