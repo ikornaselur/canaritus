@@ -9,8 +9,6 @@ import {Provider} from 'react-redux';
 import rootReducer from '../client/reducers';
 import CanaritusAppContainer from '../client/containers/CanaritusAppContainer';
 
-import {addAuthToken} from 'web-push-encryption';
-
 const config = load(path.join(__dirname, '..', '..', 'config.yaml'));
 
 export const handleRender = (req, res) => {
@@ -38,8 +36,3 @@ export const manifest = (req, res) => {
     'gcm_sender_id': config.notifications.gcm.project_number,
   });
 };
-
-// Register the gcm authentication key if gcm is enabled
-if (config.notifications.gcm.enabled) {
-  addAuthToken('https://android.googleapis.com/gcm', config.notifications.gcm.auth_token);
-}

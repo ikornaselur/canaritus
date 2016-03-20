@@ -9,6 +9,9 @@ import * as api from './src/server/api/http';
 import * as uni from './src/server/app';
 import {createHealthCheck} from './src/server/tasks';
 
+import {initialize as initializeGcm} from './src/server/notifications/gcm.js';
+import {initialize as initializeMailgun} from './src/server/notifications/mailgun.js';
+
 const app = Express();
 const httpServer = http.Server(app);
 const port = 3000;
@@ -61,3 +64,9 @@ app.post('/api/event', api.postEvent);
 
 console.log(`Listening on port ${port}`);
 httpServer.listen(port);
+
+/**
+ * Initialize notification services
+ */
+initializeGcm(config.notifications.gcm);
+initializeMailgun(config.notifications.mailgun);

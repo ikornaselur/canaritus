@@ -2,17 +2,29 @@ import path from 'path';
 import {log} from './utils';
 import {Database} from 'sqlite3';
 import {load as loadYaml} from 'node-yaml-config';
-import {gcmNotification, developmentNotification} from './notifications';
+import {
+  gcmNotify,
+  mailgunNotify,
+  devNotify
+} from './notifications';
 
 const config = loadYaml(path.join(__dirname, '..', '..', 'config.yaml'));
 
 const pingClients = (title, body, healthy) => {
-  const {gcm, development} = config.notifications;
+  const {
+    gcm,
+    mailgun,
+    development
+  } = config.notifications;
+
   if (gcm.enabled) {
-    gcmNotification(config, title, body, healthy);
+    gcmNotify(title, body, healthy);
   }
   if (development.enabled) {
-    developmentNotification(title, body);
+    devNotify(title, body);
+  }
+  if (mailgun.enabled) {
+    mailgunNotify(title, body, healthy);
   }
 };
 

@@ -15,7 +15,9 @@ const healthyMsg = (host, down) => {
   const duration = timeDuration(now - down);
   return `${host} is back up. It was down for ${duration}.`;
 };
+const healthyTitle = (host) => `Health recovered for ${host}`;
 const unhealthyMsg = (host) => `${host} is down.`;
+const unhealthyTitle = (host) => `Health degraded for ${host}`;
 
 const healthCheck = (hostName, host) => {
   log('UPTIME', `Health checking ${hostName} with ${host.timeout}s timeout`);
@@ -41,7 +43,7 @@ export const createHealthCheck = (hostName, host) => {
   let retrying = false;
   const handleTaskCatch = () => {
     if (hostStatus[hostName].healthy) {
-      addEvent(hostName, 'Automatic', false, 'Health degraded', unhealthyMsg(hostName));
+      addEvent(hostName, 'Automatic', false, unhealthyTitle(hostName), unhealthyMsg(hostName));
       hostStatus[hostName] = {
         healthy: false,
         down: new Date().getTime(),
@@ -67,7 +69,7 @@ export const createHealthCheck = (hostName, host) => {
           healthCheck(hostName, host).then(handleTaskReturn).catch(handleTaskCatch);
         }, RETRY_TIMEOUT);
       } else {
-        addEvent(hostName, 'Automatic', isHealthy, 'Health degraded', unhealthyMsg(hostName));
+        addEvent(hostName, 'Automatic', isHealthy, unhealthyTitle(hostName), unhealthyMsg(hostName));
         hostStatus[hostName] = {
           healthy: isHealthy,
           down: new Date().getTime(),
@@ -75,7 +77,7 @@ export const createHealthCheck = (hostName, host) => {
       }
     } else if (isHealthy && !hostStatus[hostName].healthy) {
       retries = host.retry;
-      addEvent(hostName, 'Automatic', isHealthy, 'Health recovered', healthyMsg(hostName, hostStatus[hostName].down));
+      addEvent(hostName, 'Automatic', isHealthy, healthyTitle(hostName), healthyMsg(hostName, hostStatus[hostName].down));
       hostStatus[hostName].healthy = isHealthy;
     }
     // Reset retrying if applicable

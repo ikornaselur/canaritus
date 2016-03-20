@@ -1,9 +1,15 @@
 import {log} from '../utils';
 import {Database} from 'sqlite3';
-import {sendWebPush} from 'web-push-encryption';
+import {addAuthToken, sendWebPush} from 'web-push-encryption';
 
 const plusIcon = '/images/CanaryStatus_plus_256px.png';
 const minusIcon = '/images/CanaryStatus_minus_256px.png';
+
+export const initialize = (config) => {
+  if (config.enabled) {
+    addAuthToken('https://android.googleapis.com/gcm', config.auth_token);
+  }
+};
 
 const generateSubscription = (row) => {
   return {
@@ -15,7 +21,7 @@ const generateSubscription = (row) => {
   };
 };
 
-const gcmNotification = (config, title, body, healthy) => {
+export const notify = (title, body, healthy) => {
   const message = JSON.stringify({
     title: title,
     body: body,
@@ -46,4 +52,3 @@ const gcmNotification = (config, title, body, healthy) => {
   db.close();
 };
 
-export default gcmNotification;

@@ -1,4 +1,4 @@
-const developmentNotification = (title, body) => {
+export const notify = (title, body) => {
   console.log(
 `
 ################################################
@@ -7,5 +7,3 @@ const developmentNotification = (title, body) => {
 ################################################
 `);
 };
-
-export default developmentNotification;
