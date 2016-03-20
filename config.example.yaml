@@ -29,7 +29,8 @@ default:
       enabled: false
     mailgun:
       enabled: true
-      api_key: '<mailgun_api_key>'
+      private_key: '<mailgun_private_api_key>'
+      public_key: '<mailgun_public_api_key>'
       domain: 'example.com'
       from: 'no-reply@example.com'
     development: # Prints out to console for development

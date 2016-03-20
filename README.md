@@ -19,7 +19,7 @@ You need to configure what hosts to do automatic uptime checks on. See the `conf
 You need to register a GCM app and add the `server_key` and `project_number` to `config.yaml`
 
 ### Mailgun
-You need to sign up on [mailgun](https://www.mailgun.com) and add the `api_key`, `domain` and `from` email address to `config.yaml`
+You need to sign up on [mailgun](https://www.mailgun.com) and add the `private_key`, `public_key`, `domain` and `from` email address to `config.yaml`
 
 ## Running
 

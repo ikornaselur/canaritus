@@ -6,7 +6,6 @@ import {load as loadYaml} from 'node-yaml-config';
 
 const _config = loadYaml(path.join(__dirname, '..', '..', '..', 'config.yaml'));
 let _mailgun;
-let _from;
 
 const generateEmailData = (emails, from, subject, body, canUnsubscribe = true) => {
   const recipientVariables = {};
@@ -38,10 +37,9 @@ const generateEmailData = (emails, from, subject, body, canUnsubscribe = true) =
 export const initialize = (config) => {
   if (config.enabled) {
     _mailgun = new Mailgun({
-      apiKey: config.api_key,
+      apiKey: config.private_key,
       domain: config.domain,
     });
-    _from = config.from;
   }
 };
 
@@ -62,7 +60,8 @@ export const notify = (title, body) => {
           };
         });
 
-        const data = generateEmailData(emails, _from, title, body);
+        const {from} = _config.notifications.mailgun;
+        const data = generateEmailData(emails, from, title, body);
 
         _mailgun.messages().send(data, (mailErr) => {
           if (mailErr) {
@@ -86,7 +85,8 @@ export const verifyEmail = (email, hash) => {
   You've just signed up for Canaritus status updates. <br/>
   Please verify the email subscription <a href='${verifyUrl}'>here</a>. <br/><br/><br/>`;
 
-  const data = generateEmailData([{email}], _from, title, body, false);
+  const {from} = _config.notifications.mailgun;
+  const data = generateEmailData([{email}], from, title, body, false);
 
   _mailgun.messages().send(data, (err) => {
     if (err) {

@@ -15,9 +15,9 @@ export const getStatus = (req, res) => {
 export const subscribe = (req, res) => {
   const {endpoint, keys} = req.body;
   if (!endpoint) {
-    res.status(421).send('id is missing from the post');
+    res.status(422).send('id is missing from the post');
   } else if (!keys || !keys.p256dh || !keys.auth) {
-    res.status(421).send('keys are missing fromt he post');
+    res.status(422).send('keys are missing fromt he post');
   } else {
     log('DB', `Adding ${endpoint} to subscriptions table`);
     const statementKeys = ['endpoint', 'p256dh', 'auth'].join(', ');
@@ -42,7 +42,7 @@ export const subscribe = (req, res) => {
 export const unsubscribe = (req, res) => {
   const {endpoint} = req.body;
   if (!endpoint) {
-    res.status(421).send('endpoint is missing from the post');
+    res.status(422).send('endpoint is missing from the post');
   } else {
     log('DB', `Removing ${endpoint} from subscriptions table`);
     const db = new Database('canaritus.db');
