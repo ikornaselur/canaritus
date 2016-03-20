@@ -11,17 +11,16 @@ const generateEmailData = (emails, from, title, body) => {
   const randHash = (len) => Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, len);
 
   const recipientVariables = {};
-  emails.map((e) => {
-    recipientVariables[e] = {hash: randHash(10)};
-  });
-
+  for (const email of emails) {
+    recipientVariables[email] = {hash: randHash(10)};
+  }
 
   return {
-    'from': `Canaritus <${from}>`,
-    'to': emails.join(', '),
+    from: `Canaritus <${from}>`,
+    to: emails.join(', '),
     'recipient-variables': JSON.stringify(recipientVariables),
-    'subject': title,
-    'html': body,
+    subject: title,
+    html: body,
   };
 };
 

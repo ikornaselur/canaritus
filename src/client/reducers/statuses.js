@@ -8,12 +8,12 @@ const initialState = {
 
 const statuses = (state = initialState, action) => {
   switch (action.type) {
-  case GET_STATUSES:
-    return Object.assign({}, state, {
-      error: null,
-    });
-  default:
-    return state;
+    case GET_STATUSES:
+      return Object.assign({}, state, {
+        error: null,
+      });
+    default:
+      return state;
   }
 };
 

@@ -23,9 +23,9 @@ const generateSubscription = (row) => {
 
 export const notify = (title, body, healthy) => {
   const message = JSON.stringify({
-    title: title,
-    body: body,
-    tag: 'canaritus-notification-tag-' + healthy ? 'healthy' : 'unhealthy',
+    title,
+    body,
+    tag: `canaritus-notification-tag-${healthy ? 'healthy' : 'unhealthy'}`,
     icon: healthy ? plusIcon : minusIcon,
   });
   const db = new Database('canaritus.db');
@@ -40,7 +40,7 @@ export const notify = (title, body, healthy) => {
         log('PUSH', `Pushing to ${subscriptions.length} subscriptions`);
 
         const handlePushResult = (res) => {
-          log('PUSH', 'Notification ping sent, status: ' + res.status);
+          log('PUSH', `Notification ping sent, status: ${res.status}`);
         };
 
         for (const sub of subscriptions) {

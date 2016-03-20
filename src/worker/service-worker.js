@@ -9,9 +9,9 @@ self.addEventListener('push', (event) => {
   const tag = 'notification-error';
 
   return self.registration.showNotification(title, {
-    body: body,
+    body,
     icon: '/images/CanaryStatus_minus_256px.png',
-    tag: tag,
+    tag,
   });
 });
 

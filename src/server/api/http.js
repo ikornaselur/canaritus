@@ -22,7 +22,13 @@ export const subscribe = (req, res) => {
   } else {
     log('DB', `Adding ${endpoint} to subscriptions table`);
     db.serialize(() => {
-      db.run(`INSERT OR IGNORE INTO subscriptions (endpoint, p256dh, auth) VALUES('${endpoint}', '${keys.p256dh}', '${keys.auth}')`, (err) => {
+      const statementKeys = ['endpoint', 'p256dh', 'auth'].join(', ');
+      const statementValues = [endpoint, keys.p256dh, keys.auth].map((x) => `'${x}'`).join(', ');
+
+      const statement =
+        `INSERT OR IGNORE INTO subscriptions (${statementKeys}) VALUES(${statementValues})`;
+
+      db.run(statement, (err) => {
         if (err !== null) {
           log('DB', 'Error adding subscription', err);
           res.sendStatus(500);

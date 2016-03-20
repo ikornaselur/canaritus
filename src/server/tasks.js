@@ -25,13 +25,13 @@ const healthCheck = (hostName, host) => {
   return fetch(host.url, {timeout: host.timeout * 1000}).then((res) => {
     const expected = res.status === host.status;
     const responseTime = (new Date()).getTime() - sendTime;
-    log('UPTIME', 'Response time: ' + responseTime + 'ms');
+    log('UPTIME', `Response time: ${responseTime} ms`);
     if (!expected) {
-      log('UPTIME', 'Unexpected status code: ' + res.status);
+      log('UPTIME', `Unexpected status code: ${res.status}`);
     }
     return expected;
   }).catch((err) => {
-    log('UPTIME', 'Error: ' + err);
+    log('UPTIME', 'Error in health check', err);
     return false;
   });
 };
@@ -69,7 +69,9 @@ export const createHealthCheck = (hostName, host) => {
           healthCheck(hostName, host).then(handleTaskReturn).catch(handleTaskCatch);
         }, RETRY_TIMEOUT);
       } else {
-        addEvent(hostName, 'Automatic', isHealthy, unhealthyTitle(hostName), unhealthyMsg(hostName));
+        addEvent(
+          hostName, 'Automatic', isHealthy, unhealthyTitle(hostName), unhealthyMsg(hostName)
+        );
         hostStatus[hostName] = {
           healthy: isHealthy,
           down: new Date().getTime(),
@@ -77,7 +79,10 @@ export const createHealthCheck = (hostName, host) => {
       }
     } else if (isHealthy && !hostStatus[hostName].healthy) {
       retries = host.retry;
-      addEvent(hostName, 'Automatic', isHealthy, healthyTitle(hostName), healthyMsg(hostName, hostStatus[hostName].down));
+      addEvent(
+        hostName, 'Automatic', isHealthy, healthyTitle(hostName),
+        healthyMsg(hostName, hostStatus[hostName].down)
+      );
       hostStatus[hostName].healthy = isHealthy;
     }
     // Reset retrying if applicable
