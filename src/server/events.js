@@ -36,15 +36,13 @@ export const addEvent = (host, type, healthy, title, body) => {
   const values =
     `'${host}', '${type}', '${healthy}', '${title}', '${body}', (SELECT strftime('%s', 'now'))`;
 
-  db.serialize(() => {
-    db.run(`INSERT INTO events (${fields}) VALUES(${values})`, (err) => {
-      if (err !== null) {
-        log('EVENT', 'Error adding event', err);
-        return false;
-      }
-      pingClients(title, body, healthy);
-      return true;
-    });
+  db.run(`INSERT INTO events (${fields}) VALUES(${values})`, (err) => {
+    if (err !== null) {
+      log('EVENT', 'Error adding event', err);
+      return false;
+    }
+    pingClients(title, body, healthy);
+    return true;
   });
   db.close();
 };

@@ -1,4 +1,7 @@
 default:
+  secret: '<canaritus_server_secret>'
+  hostname: 'status.example.com'
+  https: true # Required for web push notifications
   uptime_checks:
     native:
       enabled: true
@@ -31,4 +34,3 @@ default:
       from: 'no-reply@example.com'
     development: # Prints out to console for development
       enabled: false
-  secret: '<canaritus_server_secret>'

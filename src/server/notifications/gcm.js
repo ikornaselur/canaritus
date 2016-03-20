@@ -31,23 +31,21 @@ export const notify = (title, body, healthy) => {
   const db = new Database('canaritus.db');
 
   log('PUSH', 'Pinging all clients');
-  db.serialize(() => {
-    db.all('SELECT * FROM subscriptions', (err, rows) => {
-      if (err !== null) {
-        log('DB', 'Failed get all push registrations from db', err);
-      } else {
-        const subscriptions = rows.map(x => generateSubscription(x));
-        log('PUSH', `Pushing to ${subscriptions.length} subscriptions`);
+  db.all('SELECT * FROM subscriptions', (err, rows) => {
+    if (err !== null) {
+      log('DB', 'Failed get all push registrations from db', err);
+    } else {
+      const subscriptions = rows.map(x => generateSubscription(x));
+      log('PUSH', `Pushing to ${subscriptions.length} subscriptions`);
 
-        const handlePushResult = (res) => {
-          log('PUSH', `Notification ping sent, status: ${res.status}`);
-        };
+      const handlePushResult = (res) => {
+        log('PUSH', `Notification ping sent, status: ${res.status}`);
+      };
 
-        for (const sub of subscriptions) {
-          sendWebPush(message, sub).then(handlePushResult);
-        }
+      for (const sub of subscriptions) {
+        sendWebPush(message, sub).then(handlePushResult);
       }
-    });
+    }
   });
   db.close();
 };

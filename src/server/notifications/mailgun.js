@@ -1,7 +1,10 @@
-import {default as Mailgun} from 'mailgun-js';
+import Mailgun from 'mailgun-js';
+import path from 'path';
 import {Database} from 'sqlite3';
 import {log, randHash} from '../utils';
+import {load as loadYaml} from 'node-yaml-config';
 
+const _config = loadYaml(path.join(__dirname, '..', '..', '..', 'config.yaml'));
 let _mailgun;
 let _from;
 
@@ -36,30 +39,29 @@ export const initialize = (config) => {
 
 export const notify = (title, body) => {
   const db = new Database('canaritus.db');
-  db.serialize(() => {
-    db.all('SELECT email FROM emails WHERE verified="true"', (err, rows) => {
-      if (err !== null) {
-        log('DB', 'Failed to get emails from db', err);
-      } else {
-        if (rows.length > 0) {
-          const emails = rows.map(x => x.email);
+  db.all('SELECT email FROM emails WHERE verified="true"', (err, rows) => {
+    if (err !== null) {
+      log('DB', 'Failed to get emails from db', err);
+    } else {
+      if (rows.length > 0) {
+        const emails = rows.map(x => x.email);
 
-          const data = generateEmailData(emails, _from, title, body);
+        const data = generateEmailData(emails, _from, title, body);
 
-          _mailgun.messages().send(data, (mailErr) => {
-            if (mailErr) {
-              log('MAILGUN', 'Error sending email', mailErr);
-            }
-          });
-        }
+        _mailgun.messages().send(data, (mailErr) => {
+          if (mailErr) {
+            log('MAILGUN', 'Error sending email', mailErr);
+          }
+        });
       }
-    });
+    }
   });
+  db.close();
 };
 
 export const verifyEmail = (email, hash) => {
-  const host = 'localhost:3000';
-  const verifyUrl = `http://${host}/api/email/verify/${encodeURIComponent(hash)}`;
+  const protocol = _config.https ? 'https' : 'http';
+  const verifyUrl = `${protocol}://${_config.hostname}/api/email/verify/${encodeURIComponent(hash)}`;
   const title = 'Canaritus status updates';
   const body = `You've just signed up for Canaritus status updates. Please verify the email subscription <a href='${verifyUrl}'>here</a>.`; // eslint-disable-line max-len
 

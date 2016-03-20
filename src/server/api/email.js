@@ -21,6 +21,7 @@ export const verify = (req, res) => {
         res.status(200).send(email);
       }
     });
+    db.close();
   }
 };
 
@@ -49,6 +50,7 @@ export const subscribe = (req, res) => {
         }
       }
     );
+    db.close();
   }
 };
 
