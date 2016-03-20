@@ -5,7 +5,7 @@ import {load as loadYaml} from 'node-yaml-config';
 import {
   gcmNotify,
   mailgunNotify,
-  devNotify
+  devNotify,
 } from './notifications';
 
 const config = loadYaml(path.join(__dirname, '..', '..', 'config.yaml'));
@@ -14,7 +14,7 @@ const pingClients = (title, body, healthy) => {
   const {
     gcm,
     mailgun,
-    development
+    development,
   } = config.notifications;
 
   if (gcm.enabled) {
@@ -24,7 +24,7 @@ const pingClients = (title, body, healthy) => {
     devNotify(title, body);
   }
   if (mailgun.enabled) {
-    mailgunNotify(title, body, healthy);
+    mailgunNotify(title, body);
   }
 };
 

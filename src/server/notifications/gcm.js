@@ -51,4 +51,3 @@ export const notify = (title, body, healthy) => {
   });
   db.close();
 };
-
