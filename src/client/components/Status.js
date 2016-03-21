@@ -138,7 +138,12 @@ export default class Status extends Component {
     return (
       <div>
         <h1>Canary Status</h1>
-        <Button handleClick={::this.subscribeClick} disabled={this.state.subDisabled}>{subscribeText}</Button>
+        <Button
+          handleClick={::this.subscribeClick}
+          disabled={this.state.subDisabled}
+        >
+          {subscribeText}
+        </Button>
       </div>
     );
   }

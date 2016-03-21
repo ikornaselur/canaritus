@@ -1,18 +1,17 @@
-import React, { PropTypes, Component } from 'react';
+import React, {PropTypes} from 'react';
 
-export default class Button extends Component {
-  static propTypes = {
-    handleClick: PropTypes.func.isRequired,
-    children: PropTypes.any,
-    disabled: PropTypes.bool,
-  }
+const Button = ({children, disabled, handleClick}) => {
+  return (
+    <div>
+      <button onClick={handleClick} disabled={disabled}>{children}</button>
+    </div>
+  );
+};
 
-  render() {
-    const {children, disabled, handleClick} = this.props;
-    return (
-      <div>
-        <button onClick={handleClick} disabled={disabled}>{children}</button>
-      </div>
-    );
-  }
-}
+Button.propTypes = {
+  handleClick: PropTypes.func.isRequired,
+  children: PropTypes.any,
+  disabled: PropTypes.bool,
+};
+
+export default Button;

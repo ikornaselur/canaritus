@@ -5,7 +5,7 @@ var babel = require('gulp-babel');
 var sourcemaps = require('gulp-sourcemaps');
 var concat = require('gulp-concat');
 var watch = require('gulp-watch');
-var webpack = require('gulp-webpack');
+var webpack = require('webpack-stream');
 
 gulp.task('default', ['copy', 'webpack']);
 

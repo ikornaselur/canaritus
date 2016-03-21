@@ -10,8 +10,6 @@ const mapStateToProps = (state) => {
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators(CanaritusActions, dispatch);
-};
+const mapDispatchToProps = (dispatch) => bindActionCreators(CanaritusActions, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(CanaritusApp);

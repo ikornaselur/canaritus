@@ -5,6 +5,9 @@
     "comma-dangle": 2,
     "id-length": 0,
     "no-console": 0,
-    "new-cap": 0
+    "new-cap": 0,
+    "object-curly-spacing": [2, "never"],
+    "arrow-body-style": 0,
+    "consistent-return": 0,
   }
 }

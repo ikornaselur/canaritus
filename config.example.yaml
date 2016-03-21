@@ -1,4 +1,7 @@
 default:
+  secret: '<canaritus_server_secret>'
+  hostname: 'status.example.com'
+  https: true # Required for web push notifications
   uptime_checks:
     native:
       enabled: true
@@ -24,7 +27,11 @@ default:
       enabled: false
     pushbuller: # Not yet spported
       enabled: false
-    email: # Not yet supported
-      enabled: false
+    mailgun:
+      enabled: true
+      private_key: '<mailgun_private_api_key>'
+      public_key: '<mailgun_public_api_key>'
+      domain: 'example.com'
+      from: 'no-reply@example.com'
     development: # Prints out to console for development
       enabled: false

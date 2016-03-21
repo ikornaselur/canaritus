@@ -2,9 +2,7 @@ import moment from 'moment';
 
 const timeStamp = () => {
   const now = new Date();
-  const twoNum = (num) => {
-    return num < 10 ? '0' + num : num.toString();
-  };
+  const twoNum = (num) => num < 10 ? `0${num}` : num.toString();
   const date = `${now.getFullYear()}-${twoNum(now.getMonth())}-${twoNum(now.getDate())}`;
   const time = `${twoNum(now.getHours())}:${twoNum(now.getMinutes())}:${twoNum(now.getSeconds())}`;
   return `${date} ${time}`;
@@ -37,3 +35,6 @@ export const timeDuration = (ms) => {
   ret += `and ${duration.seconds()} second${duration.seconds() === 1 ? '' : 's'}`;
   return ret;
 };
+
+export const randHash = (len) =>
+  Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, len);

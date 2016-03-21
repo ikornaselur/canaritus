@@ -1,14 +1,12 @@
-import React, {Component, PropTypes} from 'react';
+import React, {PropTypes} from 'react';
 import {Status} from '../components';
 
-export default class CanaritusApp extends Component {
-  static propTypes = {
-    error: PropTypes.any,
-  };
+const CanaritusApp = () => (
+  <Status />
+);
 
-  render() {
-    return (
-      <Status />
-    );
-  }
-}
+CanaritusApp.propTypes = {
+  error: PropTypes.any,
+};
+
+export default CanaritusApp;
